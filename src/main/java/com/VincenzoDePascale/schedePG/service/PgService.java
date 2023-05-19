@@ -1,17 +1,12 @@
 package com.VincenzoDePascale.schedePG.service;
 
 import java.util.List;
-import java.util.Optional;
-
-import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import com.VincenzoDePascale.schedePG.auth.repository.UserRepository;
 import com.VincenzoDePascale.schedePG.list.Allineamenti;
 import com.VincenzoDePascale.schedePG.list.Classi;
-import com.VincenzoDePascale.schedePG.list.Dadi;
 import com.VincenzoDePascale.schedePG.list.Razze;
 import com.VincenzoDePascale.schedePG.model.Pg;
 import com.VincenzoDePascale.schedePG.repository.PgRepository;
@@ -32,7 +27,7 @@ public class PgService {
 	public Pg savePg(Pg pg) {
 		return pgRepo.save(pg);
 	}
-
+	
 	// SEARCH
 
 	public List<Pg> findAllPg() {
@@ -48,7 +43,7 @@ public class PgService {
 
 	public List<Pg> searchPgBygiocatoreUsername(String username) {
 		if (!userRepo.existsByUsername(username)) {
-			throw new EntityNotFoundException("Personaggio non trovato con ID: " + username);
+			throw new EntityNotFoundException("questo giocatore non ha personaggi: " + username);
 		}
 		return pgRepo.searchPgBygiocatoreUsername(username);
 	}

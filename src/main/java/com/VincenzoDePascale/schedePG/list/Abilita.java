@@ -8,32 +8,32 @@ import com.fasterxml.jackson.annotation.JsonValue;
 
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum Abilita {
-	acrobazia("acrobazia", 0, Statistiche.DESTREZZA, false),
-	addestrare_animali("addestrare animali", 0, Statistiche.SAGGEZZA, false),
-	arcano("arcano", 0, Statistiche.INTELLIGENZA, false),
-	atletica("atletica", 0, Statistiche.FORZA, false),
-	furtivita("furtività", 0, Statistiche.DESTREZZA, false),
-	indagare("indagare", 0, Statistiche.INTELLIGENZA, false),
-	inganno("inganno", 0, Statistiche.CARISMA, false),
-	intimidire("intimidire", 0, Statistiche.CARISMA, false),
-	intrattenere("intrattenere", 0, Statistiche.CARISMA, false),
-	intuizione("intuizione", 0, Statistiche.SAGGEZZA, false),
-	medicina("medicina", 0, Statistiche.SAGGEZZA, false),
-	natura("natura", 0, Statistiche.INTELLIGENZA, false),
-	percezione("percezione", 0, Statistiche.SAGGEZZA, false),
-	persuazione("persuasione", 0, Statistiche.CARISMA, false),
-	rapidita_di_mano("rapidità", 0, Statistiche.DESTREZZA, false),
-	religione("religione", 0, Statistiche.INTELLIGENZA, false),
-	sopravvivenza("sopravvivenza", 0, Statistiche.SAGGEZZA, false),
-	storia("storia", 0, Statistiche.INTELLIGENZA, false),
-	percezione_passiva("percezione", 0, Statistiche.SAGGEZZA, false);
+	acrobazia("acrobazia", 0, TipoStatistica.DESTREZZA, false),
+	addestrare_animali("addestrare animali", 0, TipoStatistica.SAGGEZZA, false),
+	arcano("arcano", 0, TipoStatistica.INTELLIGENZA, false),
+	atletica("atletica", 0, TipoStatistica.FORZA, false),
+	furtivita("furtività", 0, TipoStatistica.DESTREZZA, false),
+	indagare("indagare", 0, TipoStatistica.INTELLIGENZA, false),
+	inganno("inganno", 0, TipoStatistica.CARISMA, false),
+	intimidire("intimidire", 0, TipoStatistica.CARISMA, false),
+	intrattenere("intrattenere", 0, TipoStatistica.CARISMA, false),
+	intuizione("intuizione", 0, TipoStatistica.SAGGEZZA, false),
+	medicina("medicina", 0, TipoStatistica.SAGGEZZA, false),
+	natura("natura", 0, TipoStatistica.INTELLIGENZA, false),
+	percezione("percezione", 0, TipoStatistica.SAGGEZZA, false),
+	persuazione("persuasione", 0, TipoStatistica.CARISMA, false),
+	rapidita_di_mano("rapidità", 0, TipoStatistica.DESTREZZA, false),
+	religione("religione", 0, TipoStatistica.INTELLIGENZA, false),
+	sopravvivenza("sopravvivenza", 0, TipoStatistica.SAGGEZZA, false),
+	storia("storia", 0, TipoStatistica.INTELLIGENZA, false),
+	percezione_passiva("percezione", 0, TipoStatistica.SAGGEZZA, false);
 
 	private String nomeAbilita;
 	private Integer punteggio;
-	private Statistiche statistica;
+	private TipoStatistica statistica;
 	private boolean attivo;
 	
-	Abilita(String nomeAbilita, int punteggio, Statistiche statistica, boolean attivo) {
+	Abilita(String nomeAbilita, int punteggio, TipoStatistica statistica, boolean attivo) {
 		this.nomeAbilita = nomeAbilita;
 		this.punteggio = punteggio;
 		this.statistica = statistica;

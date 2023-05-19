@@ -16,19 +16,26 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.VincenzoDePascale.schedePG.auth.entity.User;
+import com.VincenzoDePascale.schedePG.auth.repository.UserRepository;
 import com.VincenzoDePascale.schedePG.list.Allineamenti;
 import com.VincenzoDePascale.schedePG.list.Classi;
 import com.VincenzoDePascale.schedePG.list.Razze;
 import com.VincenzoDePascale.schedePG.model.Pg;
+import com.VincenzoDePascale.schedePG.payload.PgDto;
 import com.VincenzoDePascale.schedePG.service.PgService;
 
-@CrossOrigin(origins = "*", maxAge = 360000)
+//@CrossOrigin(origins = "*", maxAge = 360000)
+@CrossOrigin
 @RestController
 @RequestMapping("/api/pg")
 public class PgController {
 
 	@Autowired
 	PgService pgService;
+	
+	@Autowired
+	UserRepository userRepo;
 
 	// GET - ricerca
 
@@ -44,11 +51,15 @@ public class PgController {
 		return new ResponseEntity<>(pgService.findById(id), HttpStatus.OK);
 	}
 
-	@GetMapping("/giocatore/{username}")
+	@GetMapping("/username/{username}")
 	@PreAuthorize("isAuthenticated()")
 	public ResponseEntity<?> searchPgBygiocatoreUsername(@PathVariable("username") String username) {
 		return new ResponseEntity<>(pgService.searchPgBygiocatoreUsername(username), HttpStatus.OK);
 	}
+	
+//	@GetMapping("/uspg/{username}/{id}")
+//	@PreAuthorize("isAuthenticated()")
+//	
 
 	@GetMapping("/nomepg/{nomepg}")
 	@PreAuthorize("isAuthenticated()")
@@ -84,21 +95,26 @@ public class PgController {
 
 	// POST - salvataggio
 
-	@PostMapping
+	@PostMapping("/save")
 	@PreAuthorize("isAuthenticated()")
-	public ResponseEntity<?> savePg(@RequestBody Pg pg) {
+	public ResponseEntity<?> savePg(@RequestBody PgDto data) {
+		User u = userRepo.findByUsername(data.getNomeUtente()).get();
+		Pg pg = new Pg(u, data.getNomePersonaggio(),
+				data.getForza(), data.getDestrezza(), data.getCostituzione(),
+				data.getIntelligenza(), data.getSaggezza(), data.getCarisma(),
+				data.getRazza(), data.getClasse(), data.getLivello());
 		return new ResponseEntity<>(pgService.savePg(pg), HttpStatus.CREATED);
 	}
 
 	// PUT - modifica
 
-	@PutMapping
+	@PutMapping("/update")
 	@PreAuthorize("isAuthenticated()")
+	//fai il search
 	public ResponseEntity<?> updatePg(@RequestBody Pg pg) {
 		return new ResponseEntity<>(pgService.updatePg(pg), HttpStatus.CREATED);
 	}
 
-	// è sempre un put
 	@DeleteMapping("/{id}")
 	@PreAuthorize("isAuthenticated()")
 	public ResponseEntity<?> delatePg(@PathVariable Long id) {

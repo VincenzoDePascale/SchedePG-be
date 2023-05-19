@@ -8,19 +8,19 @@ import com.fasterxml.jackson.annotation.JsonValue;
 
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum TiriSalvezza {
-	TS_forza("TS su forza", Statistiche.FORZA, 0, false),
-	TS_destrezza("TS su destrezza",Statistiche.DESTREZZA, 0, false),
-	TS_costituzione("TS su costituzione",Statistiche.COSTITUZIONE, 0, false),
-	TS_intelligenza("TS su intelligenza", Statistiche.INTELLIGENZA, 0, false),
-	TS_sagezza("TS su saggezza", Statistiche.SAGGEZZA,0, false),
-	TS_carisma("TS su carisma", Statistiche.CARISMA,0, false);
+	TS_forza("TS su forza", TipoStatistica.FORZA, 0, false),
+	TS_destrezza("TS su destrezza",TipoStatistica.DESTREZZA, 0, false),
+	TS_costituzione("TS su costituzione",TipoStatistica.COSTITUZIONE, 0, false),
+	TS_intelligenza("TS su intelligenza", TipoStatistica.INTELLIGENZA, 0, false),
+	TS_saggezza("TS su saggezza", TipoStatistica.SAGGEZZA,0, false),
+	TS_carisma("TS su carisma", TipoStatistica.CARISMA,0, false);
 	
 	private String nomeTS;
-	private Statistiche statistica;
+	private TipoStatistica statistica;
 	private int punteggio;
 	private boolean attivo;
 	
-	TiriSalvezza(String nomeTS, Statistiche statistica,int punteggio, boolean attivo) {
+	TiriSalvezza(String nomeTS, TipoStatistica statistica,int punteggio, boolean attivo) {
 		this.nomeTS = nomeTS;
 		this.statistica = statistica;
 		this.punteggio = punteggio;
@@ -45,6 +45,7 @@ public enum TiriSalvezza {
 			}
 		}
 	}
+
 	
 	@JsonValue
 	public Map<String, Object> getTiriSalvezza() {

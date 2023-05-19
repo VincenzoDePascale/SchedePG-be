@@ -12,7 +12,7 @@ public class SchedePgApplication {
 		
 		
 		
-		System.out.println("SchedePgApplication run...AND");
+		System.out.println("SchedePgApplication run...END");
 	}
 
 }

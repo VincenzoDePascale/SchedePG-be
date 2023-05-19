@@ -41,6 +41,8 @@ public interface PgRepository extends CrudRepository<Pg, Long> {
 
 	//allineamento
 	boolean existsByAllineamento(Allineamenti allineamento);
+	
+	//@Query(value = "Select pg FROM Pg pg WHERE LOWER(pg.allineamento) Like LOWER('%' || :allineamento || '%')")
 	List<Pg> findByAllineamento(Allineamenti allineamento);
 
 	//livello
