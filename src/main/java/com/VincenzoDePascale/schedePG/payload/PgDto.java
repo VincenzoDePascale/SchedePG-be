@@ -1,5 +1,8 @@
 package com.VincenzoDePascale.schedePG.payload;
 
+import java.util.List;
+
+import com.VincenzoDePascale.schedePG.list.Allineamenti;
 import com.VincenzoDePascale.schedePG.list.Classi;
 import com.VincenzoDePascale.schedePG.list.Razze;
 
@@ -16,6 +19,7 @@ public class PgDto {
 	
 	private String nomeUtente;
 	private String nomePersonaggio;
+	private Allineamenti allineamento;
 	private int forza;
 	private int destrezza;
 	private int costituzione;
@@ -24,6 +28,12 @@ public class PgDto {
 	private int carisma;
 	private Razze razza;
 	private Classi classe;
+	private List<String> abilitaAttive;
 	private int livello;
+	private String background;
+	private String tratti_caratteriali;
+	private String ideali;
+	private String legami;
+	private String difetti;
 
 }

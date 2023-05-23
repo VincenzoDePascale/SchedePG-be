@@ -19,8 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.VincenzoDePascale.schedePG.auth.entity.User;
 import com.VincenzoDePascale.schedePG.service.GiocatoreService;
 
-//@CrossOrigin(origins =  "http://localhost:3000/*", maxAge = 360000, allowCredentials = "true")
-@CrossOrigin(origins =  "*", maxAge = 360000)
+@CrossOrigin(origins = "http://localhost:3000", maxAge = 360000, allowCredentials = "true")
 @RestController
 @RequestMapping("/api/giocatori")
 public class GiocatoreController {

@@ -3,70 +3,50 @@ package com.VincenzoDePascale.schedePG.list;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonValue;
 
-@JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum Abilita {
-	acrobazia("acrobazia", 0, TipoStatistica.DESTREZZA, false),
-	addestrare_animali("addestrare animali", 0, TipoStatistica.SAGGEZZA, false),
-	arcano("arcano", 0, TipoStatistica.INTELLIGENZA, false),
-	atletica("atletica", 0, TipoStatistica.FORZA, false),
-	furtivita("furtività", 0, TipoStatistica.DESTREZZA, false),
-	indagare("indagare", 0, TipoStatistica.INTELLIGENZA, false),
-	inganno("inganno", 0, TipoStatistica.CARISMA, false),
-	intimidire("intimidire", 0, TipoStatistica.CARISMA, false),
-	intrattenere("intrattenere", 0, TipoStatistica.CARISMA, false),
-	intuizione("intuizione", 0, TipoStatistica.SAGGEZZA, false),
-	medicina("medicina", 0, TipoStatistica.SAGGEZZA, false),
-	natura("natura", 0, TipoStatistica.INTELLIGENZA, false),
-	percezione("percezione", 0, TipoStatistica.SAGGEZZA, false),
-	persuazione("persuasione", 0, TipoStatistica.CARISMA, false),
-	rapidita_di_mano("rapidità", 0, TipoStatistica.DESTREZZA, false),
-	religione("religione", 0, TipoStatistica.INTELLIGENZA, false),
-	sopravvivenza("sopravvivenza", 0, TipoStatistica.SAGGEZZA, false),
-	storia("storia", 0, TipoStatistica.INTELLIGENZA, false),
-	percezione_passiva("percezione", 0, TipoStatistica.SAGGEZZA, false);
-
-	private String nomeAbilita;
-	private Integer punteggio;
-	private TipoStatistica statistica;
-	private boolean attivo;
+	ACROBAZIA("acrobazia", Statistiche.DESTREZZA),
+	ADDESTRARE_ANIMALI("addestrare anumali", Statistiche.SAGGEZZA),
+	ARCANO("arcano",Statistiche.INTELLIGENZA),
+	ATLETICA("atletica", Statistiche.FORZA),
+	FURTIVITA("furtività",Statistiche.DESTREZZA),
+	INDAGARE("indagare",Statistiche.INTELLIGENZA),
+	INGANNO("inganno", Statistiche.CARISMA),
+	INTIMIDIRE("intimidire",Statistiche.CARISMA),
+	INTRATTENERE("intrattenere",Statistiche.CARISMA),
+	INTUIZIONE("intuizione",Statistiche.SAGGEZZA),
+	MEDICINA("medicina",Statistiche.SAGGEZZA),
+	NATURA("natura",Statistiche.INTELLIGENZA),
+	PERCEZIONE("percezione",Statistiche.SAGGEZZA),
+	PERSUASIONE("persuasione",Statistiche.SAGGEZZA),
+	RAPIDITA_DI_MANO("rapidità di mano",Statistiche.DESTREZZA),
+	RELIGIONE("religione",Statistiche.INTELLIGENZA),
+	SOPRAVVIVENZA("sopravvivenza",Statistiche.SAGGEZZA),
+	STORIA("storia", Statistiche.INTELLIGENZA);
 	
-	Abilita(String nomeAbilita, int punteggio, TipoStatistica statistica, boolean attivo) {
-		this.nomeAbilita = nomeAbilita;
-		this.punteggio = punteggio;
-		this.statistica = statistica;
-		this.attivo = attivo;
-	}
+	private String abilita;
+	private Statistiche modificatore;
 	
-	public void setPunteggio(String nome, int valore) {
-		for(Abilita abilita : Abilita.values()) {
-			if(abilita.name().equalsIgnoreCase(nome)) {
-				this.punteggio = valore;
-				break;
-			}
-		}
-		
-	}
-	
-	public void setAttivo(String nome, boolean valore) {
-		for(Abilita abilita : Abilita.values()) {
-			if(abilita.name().equalsIgnoreCase(nome)) {
-				this.attivo = valore;
-				break;
-			}
-		}
-		
+	Abilita(String abilita, Statistiche modificatore) {
+		this.abilita = abilita;
+		this.modificatore = modificatore;
 	}
 	
 	@JsonValue
-	public Map<String, Object> getAbilita() {
-		Map<String, Object> result = new HashMap<>();
-		result.put("abilità", nomeAbilita);
-        result.put("statistica", statistica);
-        result.put("punteggio", punteggio);
-        result.put("attivo", attivo);
-        return result;
+    public Map<String, Object> getDadi() {
+		 Map<String, Object> result = new HashMap<>();
+		 result.put("abilita", abilita);
+	     result.put("modificatore", modificatore);
+		 return result;
 	}
+
+	public String getAbilita() {
+		return abilita;
+	}
+
+	public Statistiche getModificatore() {
+		return modificatore;
+	}
+
 }

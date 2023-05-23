@@ -25,8 +25,7 @@ import com.VincenzoDePascale.schedePG.model.Pg;
 import com.VincenzoDePascale.schedePG.payload.PgDto;
 import com.VincenzoDePascale.schedePG.service.PgService;
 
-//@CrossOrigin(origins = "*", maxAge = 360000)
-@CrossOrigin
+@CrossOrigin(origins = "http://localhost:3000", maxAge = 360000, allowCredentials = "true")
 @RestController
 @RequestMapping("/api/pg")
 public class PgController {
@@ -99,10 +98,12 @@ public class PgController {
 	@PreAuthorize("isAuthenticated()")
 	public ResponseEntity<?> savePg(@RequestBody PgDto data) {
 		User u = userRepo.findByUsername(data.getNomeUtente()).get();
-		Pg pg = new Pg(u, data.getNomePersonaggio(),
+		Pg pg = new Pg(u, data.getNomePersonaggio(), data.getAllineamento(),
 				data.getForza(), data.getDestrezza(), data.getCostituzione(),
 				data.getIntelligenza(), data.getSaggezza(), data.getCarisma(),
-				data.getRazza(), data.getClasse(), data.getLivello());
+				data.getRazza(), data.getClasse(), data.getAbilitaAttive(), data.getLivello(),
+				data.getBackground(), data.getTratti_caratteriali(), data.getIdeali(),
+				data.getLegami(), data.getDifetti());
 		return new ResponseEntity<>(pgService.savePg(pg), HttpStatus.CREATED);
 	}
 
@@ -115,7 +116,7 @@ public class PgController {
 		return new ResponseEntity<>(pgService.updatePg(pg), HttpStatus.CREATED);
 	}
 
-	@DeleteMapping("/{id}")
+	@DeleteMapping("/delete/{id}")
 	@PreAuthorize("isAuthenticated()")
 	public ResponseEntity<?> delatePg(@PathVariable Long id) {
 		return new ResponseEntity<String>(pgService.deletePG(id), HttpStatus.CREATED);
