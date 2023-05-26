@@ -98,10 +98,10 @@ public class PgController {
 	@PreAuthorize("isAuthenticated()")
 	public ResponseEntity<?> savePg(@RequestBody PgDto data) {
 		User u = userRepo.findByUsername(data.getNomeUtente()).get();
-		Pg pg = new Pg(u, data.getNomePersonaggio(), data.getAllineamento(),
+		Pg pg = new Pg(u, data.getNomePersonaggio(), Allineamenti.getEnumByTipo(data.getAllineamento()),
 				data.getForza(), data.getDestrezza(), data.getCostituzione(),
 				data.getIntelligenza(), data.getSaggezza(), data.getCarisma(),
-				data.getRazza(), data.getClasse(), data.getAbilitaAttive(), data.getLivello(),
+				Razze.getEnumByTipo(data.getRazza()), Classi.getEnumByTipo(data.getClasse()) , data.getAbilitaAttive(), data.getLivello(),
 				data.getBackground(), data.getTratti_caratteriali(), data.getIdeali(),
 				data.getLegami(), data.getDifetti());
 		return new ResponseEntity<>(pgService.savePg(pg), HttpStatus.CREATED);

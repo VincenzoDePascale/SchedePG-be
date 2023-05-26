@@ -19,15 +19,15 @@ public class PgDto {
 	
 	private String nomeUtente;
 	private String nomePersonaggio;
-	private Allineamenti allineamento;
+	private String allineamento;
 	private int forza;
 	private int destrezza;
 	private int costituzione;
 	private int intelligenza;
 	private int saggezza;
 	private int carisma;
-	private Razze razza;
-	private Classi classe;
+	private String razza;
+	private String classe;
 	private List<String> abilitaAttive;
 	private int livello;
 	private String background;

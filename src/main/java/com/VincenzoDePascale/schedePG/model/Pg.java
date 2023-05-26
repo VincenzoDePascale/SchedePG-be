@@ -12,9 +12,11 @@ import com.VincenzoDePascale.schedePG.list.Classi;
 import com.VincenzoDePascale.schedePG.list.Dadi;
 import com.VincenzoDePascale.schedePG.list.Equipaggiamento;
 import com.VincenzoDePascale.schedePG.list.Linguaggi;
+import com.VincenzoDePascale.schedePG.list.Privilegi;
 import com.VincenzoDePascale.schedePG.list.Razze;
 import com.VincenzoDePascale.schedePG.list.Scudi;
 import com.VincenzoDePascale.schedePG.list.Statistiche;
+import com.VincenzoDePascale.schedePG.list.TipiEquip;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.CascadeType;
@@ -57,12 +59,15 @@ public class Pg {
 	@Column
 	private String nomePG;
 
+	@Column
 	@Enumerated(EnumType.STRING)
 	private Razze razza;
 
+	@Column
 	@Enumerated(EnumType.STRING)
 	private Classi classe;
 
+	@Column
 	@Enumerated(EnumType.STRING)
 	private Allineamenti allineamento;
 
@@ -97,6 +102,14 @@ public class Pg {
 	@Column
 	@ElementCollection(targetClass = String.class)
 	private List<String> abilitaAttive;
+	
+	@Column
+	@Enumerated(EnumType.STRING)
+	private List<TipiEquip> competenze;
+	
+	@Column
+	@Enumerated(EnumType.STRING)
+	private List<Privilegi> privilegi;
 
 	// ABILITÀ--------------------------------------------------------
 
@@ -191,7 +204,7 @@ public class Pg {
 	// costruttore SENZA ID
 	public Pg(User giocatore, String nomePG, Razze razza, Classi classe, Allineamenti allineamento, Integer livello,
 			String background, Integer puntiExp, int forza, int destrezza, int costituzione, int intelligenza,
-			int saggezza, int carisma, List<Statistiche> TSattivi, List<String> abilitaAttive, Boolean ispizazione, Integer bonusCompetenza, List<Linguaggi> linguaggi,
+			int saggezza, int carisma, List<Statistiche> TSattivi, List<String> abilitaAttive, List<TipiEquip> competenze, List<Privilegi> privilegi, Boolean ispizazione, Integer bonusCompetenza, List<Linguaggi> linguaggi,
 			Integer iniziativa, double velocita, Integer pF_max, Integer pF, Integer pF_temporanei, Dadi dado_vita,
 			Integer dado_vita_num, Integer tS_morte, List<Equipaggiamento> equipaggiamentoBase, Armature armatura,
 			Scudi scudo, List<Armi> armi, Integer monete_rame, Integer monete_argento, Integer monete_oro,
@@ -213,6 +226,8 @@ public class Pg {
 		this.carisma = carisma;
 		this.TSattivi = TSattivi;
 		this.abilitaAttive = abilitaAttive;
+		this.competenze = competenze;
+		this.privilegi = privilegi;
 		this.ispizazione = ispizazione;
 		this.bonusCompetenza = bonusCompetenza;
 		this.linguaggi = linguaggi;
@@ -320,18 +335,29 @@ public class Pg {
 		List<Statistiche> listTSattivi = new ArrayList<>();
 		List<Equipaggiamento> equip = new ArrayList<>();
 		List<Armi> listArmi = new ArrayList<>();
+		List<TipiEquip> listaCompetenze = new ArrayList<>();
 		int vitaMassima = 0;
 
 		switch (cl) {
 		case BARBARO:
 			this.dado_vita = Dadi.D12;
 			
+//			if (liv == 1) {
+//			    vitaMassima = Dadi.D12.getValore() + ((int) Math.floor((statCos - 10) / 2.0));
+//			} else {
+//			    int sum = Dadi.D12.getValore() + ((int) Math.floor((statCos - 10) / 2.0));
+//			    for (int i = 1; i < liv; i++) {
+//			        sum += (Dadi.rollDice(Dadi.D12) / 2 + 1) + ((int) Math.floor((statCos - 10) / 2.0));
+//			    }
+//			    vitaMassima = sum;
+//			}
+			
 			if (liv == 1) {
-			    vitaMassima = Dadi.D12.getValore() + ((int) Math.floor((statCos - 10) / 2.0));
+			    vitaMassima = Dadi.D12.getValore() + statCos;
 			} else {
-			    int sum = Dadi.D12.getValore() + ((int) Math.floor((statCos - 10) / 2.0));
+			    int sum = Dadi.D12.getValore() + statCos;
 			    for (int i = 1; i < liv; i++) {
-			        sum += (Dadi.rollDice(Dadi.D12) / 2 + 1) + ((int) Math.floor((statCos - 10) / 2.0));
+			        sum += (Dadi.D12.getValore() / 2 + 1) + statCos;
 			    }
 			    vitaMassima = sum;
 			}
@@ -360,16 +386,24 @@ public class Pg {
 			//tiri salvezza
 			listTSattivi.add(Statistiche.FORZA);
 			listTSattivi.add(Statistiche.COSTITUZIONE);
+			//competenze
+			listaCompetenze.add(TipiEquip.ARMATURA_LEGGERA);
+			listaCompetenze.add(TipiEquip.ARMATURA_MEDIA);
+			listaCompetenze.add(TipiEquip.SCUDO);
+			listaCompetenze.add(TipiEquip.ARMA_DA_MISCHIA_SEMPLICE);
+			listaCompetenze.add(TipiEquip.ARMA_A_DISTANZA_SEMPLICE);
+			listaCompetenze.add(TipiEquip.ARMA_DA_MISCHIA_DA_GUERRA);
+			listaCompetenze.add(TipiEquip.ARMA_A_DISTANZA_DA_GUERRA);
 			break;
 		case BARDO:
 			this.dado_vita = Dadi.D8;
 			
 			if (liv == 1) {
-			    vitaMassima = Dadi.D8.getValore() + ((int) Math.floor((statCos - 10) / 2.0));
+			    vitaMassima = Dadi.D8.getValore() + statCos;
 			} else {
-			    int sum = Dadi.D8.getValore() + ((int) Math.floor((statCos - 10) / 2.0));
+			    int sum = Dadi.D8.getValore() + statCos;
 			    for (int i = 1; i < liv; i++) {
-			        sum += (Dadi.rollDice(Dadi.D8) / 2 + 1) + ((int) Math.floor((statCos - 10) / 2.0));
+			        sum += (Dadi.D8.getValore() / 2 + 1) + statCos;
 			    }
 			    vitaMassima = sum;
 			}
@@ -403,16 +437,23 @@ public class Pg {
 			//tiri salvezza
 			listTSattivi.add(Statistiche.DESTREZZA);
 			listTSattivi.add(Statistiche.CARISMA);
+			//competenze
+			listaCompetenze.add(TipiEquip.ARMATURA_LEGGERA);
+			listaCompetenze.add(TipiEquip.ARMA_DA_MISCHIA_SEMPLICE);
+			listaCompetenze.add(TipiEquip.BALESTRA_A_MANO);
+			listaCompetenze.add(TipiEquip.SPADA_CORTA);
+			listaCompetenze.add(TipiEquip.SPADA_LUNGA);
+			listaCompetenze.add(TipiEquip.STOCCO);
 			break;
 		case CHIERICO:
 			this.dado_vita = Dadi.D8;
 			
 			if (liv == 1) {
-			    vitaMassima = Dadi.D8.getValore() + ((int) Math.floor((statCos - 10) / 2.0));
+			    vitaMassima = Dadi.D8.getValore() + statCos;
 			} else {
-			    int sum = Dadi.D8.getValore() + ((int) Math.floor((statCos - 10) / 2.0));
+			    int sum = Dadi.D8.getValore() + statCos;
 			    for (int i = 1; i < liv; i++) {
-			        sum += (Dadi.rollDice(Dadi.D8) / 2 + 1) + ((int) Math.floor((statCos - 10) / 2.0));
+			        sum += (Dadi.D8.getValore() / 2 + 1) + statCos;
 			    }
 			    vitaMassima = sum;
 			}
@@ -447,16 +488,21 @@ public class Pg {
 			//tiri salvezza
 			listTSattivi.add(Statistiche.SAGGEZZA);
 			listTSattivi.add(Statistiche.CARISMA);
+			//competenze
+			listaCompetenze.add(TipiEquip.ARMATURA_LEGGERA);
+			listaCompetenze.add(TipiEquip.ARMATURA_MEDIA);
+			listaCompetenze.add(TipiEquip.SCUDO);
+			listaCompetenze.add(TipiEquip.ARMA_DA_MISCHIA_SEMPLICE);
 			break;
 		case DRUIDO:
 			this.dado_vita = Dadi.D8;
 			
 			if (liv == 1) {
-			    vitaMassima = Dadi.D8.getValore() + ((int) Math.floor((statCos - 10) / 2.0));
+			    vitaMassima = Dadi.D8.getValore() + statCos;
 			} else {
-			    int sum = Dadi.D8.getValore() + ((int) Math.floor((statCos - 10) / 2.0));
+			    int sum = Dadi.D8.getValore() + statCos;
 			    for (int i = 1; i < liv; i++) {
-			        sum += (Dadi.rollDice(Dadi.D8) / 2 + 1) + ((int) Math.floor((statCos - 10) / 2.0));
+			        sum += (Dadi.D8.getValore() / 2 + 1) + statCos;
 			    }
 			    vitaMassima = sum;
 			}
@@ -482,16 +528,30 @@ public class Pg {
 			//tiri salvezza
 			listTSattivi.add(Statistiche.INTELLIGENZA);
 			listTSattivi.add(Statistiche.SAGGEZZA);
+			//competenze
+			listaCompetenze.add(TipiEquip.ARMATURA_LEGGERA);
+			listaCompetenze.add(TipiEquip.ARMATURA_MEDIA);
+			listaCompetenze.add(TipiEquip.SCUDO);
+			listaCompetenze.add(TipiEquip.BASTONE_FERRATO);
+			listaCompetenze.add(TipiEquip.DARDO);
+			listaCompetenze.add(TipiEquip.FALCETTO);
+			listaCompetenze.add(TipiEquip.GIAVELLOTTO);
+			listaCompetenze.add(TipiEquip.LANCIA);
+			listaCompetenze.add(TipiEquip.MAZZA);
+			listaCompetenze.add(TipiEquip.PUGNALE);
+			listaCompetenze.add(TipiEquip.RANDELLO);
+			listaCompetenze.add(TipiEquip.SCIMITARRA);
+			listaCompetenze.add(TipiEquip.FIONDA);
 			break;
 		case GUERRIERO:
 			this.dado_vita = Dadi.D10;
 			
 			if (liv == 1) {
-			    vitaMassima = Dadi.D10.getValore() + ((int) Math.floor((statCos - 10) / 2.0));
+			    vitaMassima = Dadi.D10.getValore() + statCos;
 			} else {
-			    int sum = Dadi.D10.getValore() + ((int) Math.floor((statCos - 10) / 2.0));
+			    int sum = Dadi.D10.getValore() + statCos;
 			    for (int i = 1; i < liv; i++) {
-			        sum += (Dadi.rollDice(Dadi.D10) / 2 + 1) + ((int) Math.floor((statCos - 10) / 2.0));
+			        sum += (Dadi.D10.getValore() / 2 + 1) + statCos;
 			    }
 			    vitaMassima = sum;
 			}
@@ -506,16 +566,25 @@ public class Pg {
 			//tiri salvezza
 			listTSattivi.add(Statistiche.FORZA);
 			listTSattivi.add(Statistiche.COSTITUZIONE);
+			//competenze
+			listaCompetenze.add(TipiEquip.ARMATURA_LEGGERA);
+			listaCompetenze.add(TipiEquip.ARMATURA_MEDIA);
+			listaCompetenze.add(TipiEquip.ARMATURA_PESANTE);
+			listaCompetenze.add(TipiEquip.SCUDO);
+			listaCompetenze.add(TipiEquip.ARMA_A_DISTANZA_DA_GUERRA);
+			listaCompetenze.add(TipiEquip.ARMA_A_DISTANZA_SEMPLICE);
+			listaCompetenze.add(TipiEquip.ARMA_DA_MISCHIA_DA_GUERRA);
+			listaCompetenze.add(TipiEquip.ARMA_DA_MISCHIA_SEMPLICE);
 			break;
 		case LADRO:
 			this.dado_vita = Dadi.D8;
 			
 			if (liv == 1) {
-			    vitaMassima = Dadi.D8.getValore() + ((int) Math.floor((statCos - 10) / 2.0));
+			    vitaMassima = Dadi.D8.getValore() + statCos;
 			} else {
-			    int sum = Dadi.D8.getValore() + ((int) Math.floor((statCos - 10) / 2.0));
+			    int sum = Dadi.D8.getValore() + statCos;
 			    for (int i = 1; i < liv; i++) {
-			        sum += (Dadi.rollDice(Dadi.D8) / 2 + 1) + ((int) Math.floor((statCos - 10) / 2.0));
+			        sum += (Dadi.D8.getValore() / 2 + 1) + statCos;
 			    }
 			    vitaMassima = sum;
 			}
@@ -534,16 +603,23 @@ public class Pg {
 			//tiri salvezza
 			listTSattivi.add(Statistiche.DESTREZZA);
 			listTSattivi.add(Statistiche.INTELLIGENZA);
+			//competenze
+			listaCompetenze.add(TipiEquip.ARMATURA_LEGGERA);
+			listaCompetenze.add(TipiEquip.ARMA_DA_MISCHIA_SEMPLICE);
+			listaCompetenze.add(TipiEquip.BALESTRA_A_MANO);
+			listaCompetenze.add(TipiEquip.SPADA_CORTA);
+			listaCompetenze.add(TipiEquip.SPADA_LUNGA);
+			listaCompetenze.add(TipiEquip.STOCCO);
 			break;
 		case MAGO:
 			this.dado_vita = Dadi.D6;
 			
 			if (liv == 1) {
-			    vitaMassima = Dadi.D6.getValore() + ((int) Math.floor((statCos - 10) / 2.0));
+			    vitaMassima = Dadi.D6.getValore() + statCos;
 			} else {
-			    int sum = Dadi.D6.getValore() + ((int) Math.floor((statCos - 10) / 2.0));
+			    int sum = Dadi.D6.getValore() + statCos;
 			    for (int i = 1; i < liv; i++) {
-			        sum += (Dadi.rollDice(Dadi.D6) / 2 + 1) + ((int) Math.floor((statCos - 10) / 2.0));
+			        sum += (Dadi.D6.getValore() / 2 + 1) + statCos;
 			    }
 			    vitaMassima = sum;
 			}
@@ -568,16 +644,22 @@ public class Pg {
 			//tiri salvezza
 			listTSattivi.add(Statistiche.INTELLIGENZA);
 			listTSattivi.add(Statistiche.SAGGEZZA);
-//			break;
+			//competenze
+			listaCompetenze.add(TipiEquip.BALESTRA_A_MANO);
+			listaCompetenze.add(TipiEquip.BASTONE_FERRATO);
+			listaCompetenze.add(TipiEquip.DARDO);
+			listaCompetenze.add(TipiEquip.FIONDA);
+			listaCompetenze.add(TipiEquip.PUGNALE);
+			break;
 		case MONACO:
 			this.dado_vita = Dadi.D8;
 			
 			if (liv == 1) {
-			    vitaMassima = Dadi.D8.getValore() + ((int) Math.floor((statCos - 10) / 2.0));
+			    vitaMassima = Dadi.D8.getValore() + statCos;
 			} else {
-			    int sum = Dadi.D8.getValore() + ((int) Math.floor((statCos - 10) / 2.0));
+			    int sum = Dadi.D8.getValore() + statCos;
 			    for (int i = 1; i < liv; i++) {
-			        sum += (Dadi.rollDice(Dadi.D8) / 2 + 1) + ((int) Math.floor((statCos - 10) / 2.0));
+			        sum += (Dadi.D8.getValore() / 2 + 1) + statCos;
 			    }
 			    vitaMassima = sum;
 			}
@@ -585,19 +667,25 @@ public class Pg {
 			listArmi.add(Armi.SPADA_CORTA);
 			//uno zaino da speleologo o uno zaino da esploratore
 			//10 dardi
+			for(int i = 0; i<10; i++) {
+				listArmi.add(Armi.DARDO);
+			}
 			this.scudo = null;
 			//tiri salvezza
 			listTSattivi.add(Statistiche.DESTREZZA);
 			listTSattivi.add(Statistiche.SAGGEZZA);
+			//competenze
+			listaCompetenze.add(TipiEquip.ARMA_DA_MISCHIA_SEMPLICE);
+			listaCompetenze.add(TipiEquip.SPADA_CORTA);
 			break;
 		case PALADINO:
 			this.dado_vita = Dadi.D10;
 			if (liv == 1) {
-			    vitaMassima = Dadi.D10.getValore() + ((int) Math.floor((statCos - 10) / 2.0));
+			    vitaMassima = Dadi.D10.getValore() + statCos;
 			} else {
-			    int sum = Dadi.D10.getValore() + ((int) Math.floor((statCos - 10) / 2.0));
+			    int sum = Dadi.D10.getValore() + statCos;
 			    for (int i = 1; i < liv; i++) {
-			        sum += (Dadi.rollDice(Dadi.D10) / 2 + 1) + ((int) Math.floor((statCos - 10) / 2.0));
+			        sum += (Dadi.D10.getValore() / 2 + 1) + statCos;
 			    }
 			    vitaMassima = sum;
 			}
@@ -615,16 +703,25 @@ public class Pg {
 			//tiri salvezza
 			listTSattivi.add(Statistiche.SAGGEZZA);
 			listTSattivi.add(Statistiche.CARISMA);
+			//competenze
+			listaCompetenze.add(TipiEquip.ARMATURA_LEGGERA);
+			listaCompetenze.add(TipiEquip.ARMATURA_MEDIA);
+			listaCompetenze.add(TipiEquip.ARMATURA_PESANTE);
+			listaCompetenze.add(TipiEquip.SCUDO);
+			listaCompetenze.add(TipiEquip.ARMA_A_DISTANZA_DA_GUERRA);
+			listaCompetenze.add(TipiEquip.ARMA_A_DISTANZA_SEMPLICE);
+			listaCompetenze.add(TipiEquip.ARMA_DA_MISCHIA_DA_GUERRA);
+			listaCompetenze.add(TipiEquip.ARMA_DA_MISCHIA_SEMPLICE);
 			break;
 		case RANGER:
 			this.dado_vita = Dadi.D10;
 			
 			if (liv == 1) {
-			    vitaMassima = Dadi.D10.getValore() + ((int) Math.floor((statCos - 10) / 2.0));
+			    vitaMassima = Dadi.D10.getValore() + statCos;
 			} else {
-			    int sum = Dadi.D10.getValore() + ((int) Math.floor((statCos - 10) / 2.0));
+			    int sum = Dadi.D10.getValore() + statCos;
 			    for (int i = 1; i < liv; i++) {
-			        sum += (Dadi.rollDice(Dadi.D10) / 2 + 1) + ((int) Math.floor((statCos - 10) / 2.0));
+			        sum += (Dadi.D10.getValore() / 2 + 1) + statCos;
 			    }
 			    vitaMassima = sum;
 			}
@@ -639,16 +736,24 @@ public class Pg {
 			//tiri salvezza
 			listTSattivi.add(Statistiche.FORZA);
 			listTSattivi.add(Statistiche.DESTREZZA);
+			//competenze
+			listaCompetenze.add(TipiEquip.ARMATURA_LEGGERA);
+			listaCompetenze.add(TipiEquip.ARMATURA_MEDIA);
+			listaCompetenze.add(TipiEquip.SCUDO);
+			listaCompetenze.add(TipiEquip.ARMA_A_DISTANZA_DA_GUERRA);
+			listaCompetenze.add(TipiEquip.ARMA_A_DISTANZA_SEMPLICE);
+			listaCompetenze.add(TipiEquip.ARMA_DA_MISCHIA_DA_GUERRA);
+			listaCompetenze.add(TipiEquip.ARMA_DA_MISCHIA_SEMPLICE);
 			break;
 		case STREGONE:
 			this.dado_vita = Dadi.D6;
 			
 			if (liv == 1) {
-			    vitaMassima = Dadi.D6.getValore() + ((int) Math.floor((statCos - 10) / 2.0));
+			    vitaMassima = Dadi.D6.getValore() + statCos;
 			} else {
-			    int sum = Dadi.D6.getValore() + ((int) Math.floor((statCos - 10) / 2.0));
+			    int sum = Dadi.D6.getValore() + statCos;
 			    for (int i = 1; i < liv; i++) {
-			        sum += (Dadi.rollDice(Dadi.D6) / 2 + 1) + ((int) Math.floor((statCos - 10) / 2.0));
+			        sum += (Dadi.D6.getValore() / 2 + 1) + statCos;
 			    }
 			    vitaMassima = sum;
 			}
@@ -672,16 +777,22 @@ public class Pg {
 			//tiri salvezza
 			listTSattivi.add(Statistiche.COSTITUZIONE);
 			listTSattivi.add(Statistiche.CARISMA);
+			//competenze
+			listaCompetenze.add(TipiEquip.BALESTRA_LEGGERA);
+			listaCompetenze.add(TipiEquip.BASTONE_FERRATO);
+			listaCompetenze.add(TipiEquip.DARDO);
+			listaCompetenze.add(TipiEquip.FIONDA);
+			listaCompetenze.add(TipiEquip.PUGNALE);
 			break;
 		case WARLOCK:
 			this.dado_vita = Dadi.D8;
 			
 			if (liv == 1) {
-			    vitaMassima = Dadi.D8.getValore() + ((int) Math.floor((statCos - 10) / 2.0));
+			    vitaMassima = Dadi.D8.getValore() + statCos;
 			} else {
-			    int sum = Dadi.D8.getValore() + ((int) Math.floor((statCos - 10) / 2.0));
+			    int sum = Dadi.D8.getValore() + statCos;
 			    for (int i = 1; i < liv; i++) {
-			        sum += (Dadi.rollDice(Dadi.D8) / 2 + 1) + ((int) Math.floor((statCos - 10) / 2.0));
+			        sum += (Dadi.D8.getValore() / 2 + 1) + statCos;
 			    }
 			    vitaMassima = sum;
 			}
@@ -706,6 +817,10 @@ public class Pg {
 			//tiri salvezza
 			listTSattivi.add(Statistiche.SAGGEZZA);
 			listTSattivi.add(Statistiche.CARISMA);
+			//competenze
+			listaCompetenze.add(TipiEquip.ARMATURA_LEGGERA);
+			listaCompetenze.add(TipiEquip.ARMA_DA_MISCHIA_SEMPLICE);
+			listaCompetenze.add(TipiEquip.ARMA_A_DISTANZA_SEMPLICE);
 			break;
 		default:
 			break;
@@ -795,11 +910,15 @@ public class Pg {
 		default:
 			break;
 		}
+		
 
-		/*
-		 * listaStat.add(statFor); listaStat.add(statDes); listaStat.add(statCos);
-		 * listaStat.add(statInt); listaStat.add(statSag); listaStat.add(statCar);
-		 */
+		List<Privilegi> listaPrivilegi = new ArrayList<>();
+		
+		for (Privilegi privilegio : Privilegi.values()) {
+		    if (cl == privilegio.getClasse() && liv >= privilegio.getLivello()) {
+		        listaPrivilegi.add(privilegio);
+		    }
+		}
 
 		this.giocatore = giocatore;
 		this.nomePG = nomePG;
@@ -817,6 +936,8 @@ public class Pg {
 		this.carisma = statCar;
 		this.TSattivi = listTSattivi;
 		this.abilitaAttive = abilitaAttive;
+		this.competenze = listaCompetenze;
+		this.privilegi = listaPrivilegi;
 		this.ispizazione = false;
 		this.linguaggi = listaLinguaggi;
 		this.iniziativa = 0;
