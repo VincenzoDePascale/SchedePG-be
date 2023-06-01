@@ -2,10 +2,6 @@ package com.VincenzoDePascale.schedePG.payload;
 
 import java.util.List;
 
-import com.VincenzoDePascale.schedePG.list.Allineamenti;
-import com.VincenzoDePascale.schedePG.list.Classi;
-import com.VincenzoDePascale.schedePG.list.Razze;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

@@ -56,19 +56,19 @@ public enum Armi {
 	private Dadi danno;
 	private TipoDanno tipoDanno;
 	private int numeroDadi;
-	private String descrizione;
+	private String proprieta;
     private double costo;
     private Moneta moneta;
     private double peso;
     
-	Armi(String nome, TipiEquip tipo, int numeroDadi, Dadi danno, TipoDanno tipoDanno, String descrizione, double costo, Moneta moneta,
+	Armi(String nome, TipiEquip tipo, int numeroDadi, Dadi danno, TipoDanno tipoDanno, String proprieta, double costo, Moneta moneta,
 			double peso) {
 		this.nome = nome;
 		this.tipo = tipo;
 		this.numeroDadi = numeroDadi;
 		this.danno = danno;
 		this.tipoDanno = tipoDanno;
-		this.descrizione = descrizione;
+		this.proprieta = proprieta;
 		this.costo = costo;
 		this.moneta = moneta;
 		this.peso = peso;
@@ -94,8 +94,8 @@ public enum Armi {
 		return numeroDadi;
 	}
 
-	public String getDescrizione() {
-		return descrizione;
+	public String getProprieta() {
+		return proprieta;
 	}
 
 	public double getCosto() {
@@ -118,7 +118,7 @@ public enum Armi {
 		result.put("numeroDadi", numeroDadi);
 		result.put("danno", danno);
 		result.put("tipoDanno", tipoDanno);
-		result.put("descrizione", descrizione);
+		result.put("proprieta", proprieta);
 		result.put("costo", costo);
 		result.put("moneta", moneta);
 		result.put("peso", peso);

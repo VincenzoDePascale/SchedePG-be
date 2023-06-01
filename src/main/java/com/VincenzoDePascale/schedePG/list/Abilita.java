@@ -48,5 +48,14 @@ public enum Abilita {
 	public Statistiche getModificatore() {
 		return modificatore;
 	}
+	
+	public static Abilita getEnumByNome(String nome) {
+        for (Abilita data : Abilita.values()) {
+            if (data.getAbilita().equalsIgnoreCase(nome)) {
+                return data;
+            }
+        }
+        throw new IllegalArgumentException("Nessuna competenza trovata con questo nome: " + nome);
+    }
 
 }

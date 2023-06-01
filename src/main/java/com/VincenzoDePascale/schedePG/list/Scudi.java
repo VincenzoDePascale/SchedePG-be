@@ -70,5 +70,14 @@ public enum Scudi {
 		result.put("peso", peso);
 		return result;
 	}
+	
+	public static Scudi getEnumByNome(String nome) {
+        for (Scudi data : Scudi.values()) {
+            if (data.getNome().equalsIgnoreCase(nome)) {
+                return data;
+            }
+        }
+        throw new IllegalArgumentException("Nessuno scudo trovato con questo nome: " + nome);
+    }
 
 }

@@ -36,5 +36,14 @@ public enum Statistiche {
 	public String getModificatore() {
 		return modificatore;
 	}
+	
+	public static Statistiche getEnumByStatistica(String nome) {
+        for (Statistiche data : Statistiche.values()) {
+            if (data.getStatistica().equalsIgnoreCase(nome)) {
+                return data;
+            }
+        }
+        throw new IllegalArgumentException("Nessuna competenza trovata con questo nome: " + nome);
+    }
 
 }

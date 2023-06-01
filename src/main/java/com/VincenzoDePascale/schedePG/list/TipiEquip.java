@@ -14,7 +14,7 @@ public enum TipiEquip {
 	ARMATURA_LEGGERA("armatura leggera"),
 	ARMATURA_MEDIA("armatura media"),
 	ARMATURA_PESANTE("armatura pesante"),
-	SCUDO("scrudo"),
+	SCUDO("scudo"),
 	POZIONE("pozione"),
 	GIOCO("gioco"),
 	STRUMENTO("strumento"),
@@ -60,4 +60,13 @@ public enum TipiEquip {
 	public String getNome() {
 		return nome;
 	}
+	
+	public static TipiEquip getEnumByNome(String nome) {
+        for (TipiEquip data : TipiEquip.values()) {
+            if (data.getNome().equalsIgnoreCase(nome)) {
+                return data;
+            }
+        }
+        throw new IllegalArgumentException("Nessuna competenza trovata con questo nome: " + nome);
+    }
 }

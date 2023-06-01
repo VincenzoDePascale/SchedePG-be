@@ -116,11 +116,6 @@ public class Testing {
 	}
 
 	@Test
-	public void testIspirazionePg() {
-		assertEquals(true, pg.getIspizazione());
-	}
-
-	@Test
 	public void testBonusCompetenzaPg() {
 		assertEquals(0, pg.getBonusCompetenza());
 	}

@@ -114,7 +114,7 @@ public class Pg {
 	// ABILITÀ--------------------------------------------------------
 
 	@Column(nullable = false)
-	private Boolean ispizazione;
+	private boolean ispirazione;
 
 	@Column
 	private Integer bonusCompetenza;
@@ -228,7 +228,7 @@ public class Pg {
 		this.abilitaAttive = abilitaAttive;
 		this.competenze = competenze;
 		this.privilegi = privilegi;
-		this.ispizazione = ispizazione;
+		this.ispirazione = ispizazione;
 		this.bonusCompetenza = bonusCompetenza;
 		this.linguaggi = linguaggi;
 		this.iniziativa = iniziativa;
@@ -337,80 +337,90 @@ public class Pg {
 		List<Armi> listArmi = new ArrayList<>();
 		List<TipiEquip> listaCompetenze = new ArrayList<>();
 		int vitaMassima = 0;
+		int modCos = ((int) Math.floor((statCos - 10) / 2.0));
 
 		switch (cl) {
 		case BARBARO:
 			this.dado_vita = Dadi.D12;
 			
-//			if (liv == 1) {
-//			    vitaMassima = Dadi.D12.getValore() + ((int) Math.floor((statCos - 10) / 2.0));
-//			} else {
-//			    int sum = Dadi.D12.getValore() + ((int) Math.floor((statCos - 10) / 2.0));
-//			    for (int i = 1; i < liv; i++) {
-//			        sum += (Dadi.rollDice(Dadi.D12) / 2 + 1) + ((int) Math.floor((statCos - 10) / 2.0));
-//			    }
-//			    vitaMassima = sum;
-//			}
-			
 			if (liv == 1) {
-			    vitaMassima = Dadi.D12.getValore() + statCos;
+			    vitaMassima = Dadi.D12.getValore() + modCos;
 			} else {
-			    int sum = Dadi.D12.getValore() + statCos;
+			    int sum = Dadi.D12.getValore() + modCos;
 			    for (int i = 1; i < liv; i++) {
-			        sum += (Dadi.D12.getValore() / 2 + 1) + statCos;
+			        sum += (Dadi.D12.getValore() / 2 + 1) + modCos;
 			    }
 			    vitaMassima = sum;
 			}
 			
-			//un'ascia bipenne o qualsiasi arma da guerra da mischia
-			listArmi.add(Armi.ASCIA_BIPENNE);
+			//un'ascia bipenne o qualsiasi arma da guerra da mischia +
 			//due asce o una qualsiasi arma semplice
-			listArmi.add(Armi.ASCIA);
-			listArmi.add(Armi.ASCIA);
+			addToList(listArmi,
+					Armi.ASCIA_BIPENNE,
+					Armi.ASCIA,
+					Armi.ASCIA);
 			//Una dotazione da esploratore e quattro giavellotti
-			equip.add(Equipaggiamento.ZAINO);
-			equip.add(Equipaggiamento.GIACIGLIO);
-			equip.add(Equipaggiamento.GAVETTA);
-			equip.add(Equipaggiamento.ACCIARINO_E_PIETRA_FOCAIA);
-			equip.add(Equipaggiamento.CORDA_DI_CANAPA);
+			addToList(equip,
+					Equipaggiamento.ZAINO,
+					Equipaggiamento.GIACIGLIO,
+					Equipaggiamento.GAVETTA,
+					Equipaggiamento.ACCIARINO_E_PIETRA_FOCAIA,
+					Equipaggiamento.CORDA_DI_CANAPA,
+					Equipaggiamento.OTRE);
 			for(int i = 0; i<10; i++) {
-				equip.add(Equipaggiamento.TORCIA);
-				equip.add(Equipaggiamento.RAZIONE);
+				addToList(equip,
+						Equipaggiamento.TORCIA,
+						Equipaggiamento.RAZIONE);
 			}
-			equip.add(Equipaggiamento.OTRE);
 			
 			for(int i = 0; i<4; i++) {
 				listArmi.add(Armi.GIAVELLOTTO);
 			}
 			this.scudo = null;
 			//tiri salvezza
-			listTSattivi.add(Statistiche.FORZA);
-			listTSattivi.add(Statistiche.COSTITUZIONE);
+			addToList(listTSattivi, Statistiche.FORZA, Statistiche.COSTITUZIONE);
 			//competenze
-			listaCompetenze.add(TipiEquip.ARMATURA_LEGGERA);
-			listaCompetenze.add(TipiEquip.ARMATURA_MEDIA);
-			listaCompetenze.add(TipiEquip.SCUDO);
-			listaCompetenze.add(TipiEquip.ARMA_DA_MISCHIA_SEMPLICE);
-			listaCompetenze.add(TipiEquip.ARMA_A_DISTANZA_SEMPLICE);
-			listaCompetenze.add(TipiEquip.ARMA_DA_MISCHIA_DA_GUERRA);
-			listaCompetenze.add(TipiEquip.ARMA_A_DISTANZA_DA_GUERRA);
+			addToList(listaCompetenze,
+					TipiEquip.ARMATURA_LEGGERA,
+					TipiEquip.ARMATURA_MEDIA,
+					TipiEquip.SCUDO,
+					TipiEquip.ARMA_DA_MISCHIA_SEMPLICE,
+					TipiEquip.ARMA_A_DISTANZA_SEMPLICE,
+					TipiEquip.ARMA_DA_MISCHIA_DA_GUERRA,
+					TipiEquip.ARMA_A_DISTANZA_DA_GUERRA);
 			break;
 		case BARDO:
 			this.dado_vita = Dadi.D8;
 			
 			if (liv == 1) {
-			    vitaMassima = Dadi.D8.getValore() + statCos;
+			    vitaMassima = Dadi.D8.getValore() + modCos;
 			} else {
-			    int sum = Dadi.D8.getValore() + statCos;
+			    int sum = Dadi.D8.getValore() + modCos;
 			    for (int i = 1; i < liv; i++) {
-			        sum += (Dadi.D8.getValore() / 2 + 1) + statCos;
+			        sum += (Dadi.D8.getValore() / 2 + 1) + modCos;
 			    }
 			    vitaMassima = sum;
 			}
 			//uno stocco, una spada lunga o una qualsiasi arma semplice
-			listArmi.add(Armi.STOCCO);
+			addToList(listArmi,
+					Armi.STOCCO,
+					Armi.PUGNALE);
+			//Un'armatura di cuoio e un pugnale
+			this.armatura= Armature.CUOIO;
+			this.scudo = null;
 			//una dotazione da diplomatico o una dotazione da intrattenitore [diplomatico]
-			equip.add(Equipaggiamento.FORZIERE);
+			addToList(equip,
+					Equipaggiamento.FORZIERE,
+					Equipaggiamento.ABITO_PR,
+					Equipaggiamento.INCHIOSTRO,
+					Equipaggiamento.PENNINO,
+					Equipaggiamento.LAMPADA,
+					Equipaggiamento.PROFUMO,
+					Equipaggiamento.CERA_PER_SIGILLO,
+					Equipaggiamento.SAPONE,
+					//un liuto o (b) un qualsiasi altro strumento musicale [ora solo liuto]
+					Equipaggiamento.LIUTO);
+
 			for(int i = 0; i<2; i++) {
 				equip.add(Equipaggiamento.CUSTODIA_PER_MAPPE_O_PERGAMENE);
 				equip.add(Equipaggiamento.AMPOLLA);
@@ -418,91 +428,77 @@ public class Pg {
 			for(int i = 0; i<5; i++) {
 				equip.add(Equipaggiamento.CARTA);
 			}
-			equip.add(Equipaggiamento.ABITO_PR);
-			equip.add(Equipaggiamento.INCHIOSTRO);
-			equip.add(Equipaggiamento.PENNINO);
-			equip.add(Equipaggiamento.LAMPADA);
-			equip.add(Equipaggiamento.PROFUMO);
-			equip.add(Equipaggiamento.CERA_PER_SIGILLO);
-			equip.add(Equipaggiamento.SAPONE);
-
-			//un liuto o (b) un qualsiasi altro strumento musicale [ora solo liuto]
-			equip.add(Equipaggiamento.LIUTO);
-			
-			//Un'armatura di cuoio e un pugnale
-			this.armatura= Armature.CUOIO;
-			listArmi.add(Armi.PUGNALE);
-			this.scudo = null;
 
 			//tiri salvezza
-			listTSattivi.add(Statistiche.DESTREZZA);
-			listTSattivi.add(Statistiche.CARISMA);
+			addToList(listTSattivi, Statistiche.DESTREZZA, Statistiche.CARISMA);
 			//competenze
-			listaCompetenze.add(TipiEquip.ARMATURA_LEGGERA);
-			listaCompetenze.add(TipiEquip.ARMA_DA_MISCHIA_SEMPLICE);
-			listaCompetenze.add(TipiEquip.BALESTRA_A_MANO);
-			listaCompetenze.add(TipiEquip.SPADA_CORTA);
-			listaCompetenze.add(TipiEquip.SPADA_LUNGA);
-			listaCompetenze.add(TipiEquip.STOCCO);
+			addToList(listaCompetenze,
+					TipiEquip.ARMATURA_LEGGERA,
+					TipiEquip.ARMA_DA_MISCHIA_SEMPLICE,
+					TipiEquip.BALESTRA_A_MANO,
+					TipiEquip.SPADA_CORTA,
+					TipiEquip.SPADA_LUNGA,
+					TipiEquip.STOCCO);
 			break;
 		case CHIERICO:
 			this.dado_vita = Dadi.D8;
 			
 			if (liv == 1) {
-			    vitaMassima = Dadi.D8.getValore() + statCos;
+			    vitaMassima = Dadi.D8.getValore() + modCos;
 			} else {
-			    int sum = Dadi.D8.getValore() + statCos;
+			    int sum = Dadi.D8.getValore() + modCos;
 			    for (int i = 1; i < liv; i++) {
-			        sum += (Dadi.D8.getValore() / 2 + 1) + statCos;
+			        sum += (Dadi.D8.getValore() / 2 + 1) + modCos;
 			    }
 			    vitaMassima = sum;
 			}
 			//una mazza o un martello da guerra (se ha competenza)
-			listArmi.add(Armi.MAZZA);
+			//una balestra leggera e 20 quadrelli o una qualsiasi arma semplice
+			addToList(listArmi, Armi.BALESTRA_LEGGERA, Armi.MAZZA);
 			//una corazza di scaglie, (b) un'armatura di cuoio o (c) una cotta di maglia (Se ha competenza)
 			this.armatura= Armature.CORAZZA_DI_SCAGLIE;
 			
-			//una balestra leggera e 20 quadrelli o una qualsiasi arma semplice
-			listArmi.add(Armi.BALESTRA_LEGGERA);
 			//una dotazione da sacerdote o (b) una dotazione da esploratore [ora solo sacerdote]
-			equip.add(Equipaggiamento.ZAINO);
-			equip.add(Equipaggiamento.COPERTA);
+			addToList(equip,
+					Equipaggiamento.ZAINO,
+					Equipaggiamento.COPERTA,
+					Equipaggiamento.ACCIARINO_E_PIETRA_FOCAIA,
+					Equipaggiamento.CASSETTA_PER_LE_OFFERTE,
+					Equipaggiamento.INCENSIERE,
+					Equipaggiamento.VESTE,
+					Equipaggiamento.OTRE,
+					Equipaggiamento.EMBLEMA);
 			for(int i = 0; i<10; i++) {
 				equip.add(Equipaggiamento.CANDELA);
 			}
-			equip.add(Equipaggiamento.ACCIARINO_E_PIETRA_FOCAIA);
-			equip.add(Equipaggiamento.CASSETTA_PER_LE_OFFERTE);
 			for(int i = 0; i<2; i++) {
 				equip.add(Equipaggiamento.INCENSO);
 			}
-			equip.add(Equipaggiamento.INCENSIERE);
-			equip.add(Equipaggiamento.VESTE);
 			for(int i = 0; i<10; i++) {
 				equip.add(Equipaggiamento.RAZIONE);
 			}
-			equip.add(Equipaggiamento.OTRE);
 			
 			//Uno scudo e un simbolo sacro
-			equip.add(Equipaggiamento.EMBLEMA);
+			
 			this.scudo = Scudi.SCUDO;
 			//tiri salvezza
-			listTSattivi.add(Statistiche.SAGGEZZA);
-			listTSattivi.add(Statistiche.CARISMA);
+			addToList(listTSattivi, Statistiche.SAGGEZZA, Statistiche.CARISMA);
 			//competenze
-			listaCompetenze.add(TipiEquip.ARMATURA_LEGGERA);
-			listaCompetenze.add(TipiEquip.ARMATURA_MEDIA);
-			listaCompetenze.add(TipiEquip.SCUDO);
-			listaCompetenze.add(TipiEquip.ARMA_DA_MISCHIA_SEMPLICE);
+			addToList(listaCompetenze,
+					TipiEquip.ARMATURA_LEGGERA,
+					TipiEquip.ARMATURA_MEDIA,
+					TipiEquip.SCUDO,
+					TipiEquip.ARMA_DA_MISCHIA_SEMPLICE);
 			break;
 		case DRUIDO:
 			this.dado_vita = Dadi.D8;
 			
 			if (liv == 1) {
-			    vitaMassima = Dadi.D8.getValore() + statCos;
+			    vitaMassima = Dadi.D8.getValore() + modCos;
 			} else {
-			    int sum = Dadi.D8.getValore() + statCos;
+			    int sum = Dadi.D8.getValore() + modCos;
 			    for (int i = 1; i < liv; i++) {
-			        sum += (Dadi.D8.getValore() / 2 + 1) + statCos;
+			        sum += (Dadi.D8.getValore() / 2 + 1) + modCos;
 			    }
 			    vitaMassima = sum;
 			}
@@ -513,215 +509,233 @@ public class Pg {
 			//Un'armatura di cuoio
 			this.armatura= Armature.CUOIO;
 			//una dotazione da esploratore
-			equip.add(Equipaggiamento.ZAINO);
-			equip.add(Equipaggiamento.GIACIGLIO);
-			equip.add(Equipaggiamento.GAVETTA);
-			equip.add(Equipaggiamento.ACCIARINO_E_PIETRA_FOCAIA);
-			equip.add(Equipaggiamento.CORDA_DI_CANAPA);
+			addToList(equip,
+					Equipaggiamento.ZAINO,
+					Equipaggiamento.GIACIGLIO,
+					Equipaggiamento.GAVETTA,
+					Equipaggiamento.ACCIARINO_E_PIETRA_FOCAIA,
+					Equipaggiamento.CORDA_DI_CANAPA,
+					Equipaggiamento.OTRE,
+					Equipaggiamento.TOTEM);
+			
 			for(int i = 0; i<10; i++) {
-				equip.add(Equipaggiamento.TORCIA);
-				equip.add(Equipaggiamento.RAZIONE);
+				addToList(equip, Equipaggiamento.TORCIA, Equipaggiamento.RAZIONE);
 			}
-			equip.add(Equipaggiamento.OTRE);
 			//un focus druidico
-			equip.add(Equipaggiamento.TOTEM);
 			//tiri salvezza
-			listTSattivi.add(Statistiche.INTELLIGENZA);
-			listTSattivi.add(Statistiche.SAGGEZZA);
+			addToList(listTSattivi,
+					Statistiche.INTELLIGENZA,
+					Statistiche.SAGGEZZA);
 			//competenze
-			listaCompetenze.add(TipiEquip.ARMATURA_LEGGERA);
-			listaCompetenze.add(TipiEquip.ARMATURA_MEDIA);
-			listaCompetenze.add(TipiEquip.SCUDO);
-			listaCompetenze.add(TipiEquip.BASTONE_FERRATO);
-			listaCompetenze.add(TipiEquip.DARDO);
-			listaCompetenze.add(TipiEquip.FALCETTO);
-			listaCompetenze.add(TipiEquip.GIAVELLOTTO);
-			listaCompetenze.add(TipiEquip.LANCIA);
-			listaCompetenze.add(TipiEquip.MAZZA);
-			listaCompetenze.add(TipiEquip.PUGNALE);
-			listaCompetenze.add(TipiEquip.RANDELLO);
-			listaCompetenze.add(TipiEquip.SCIMITARRA);
-			listaCompetenze.add(TipiEquip.FIONDA);
+			addToList(listaCompetenze,
+					TipiEquip.ARMATURA_LEGGERA,
+					TipiEquip.ARMATURA_MEDIA,
+					TipiEquip.SCUDO,
+					TipiEquip.BASTONE_FERRATO,
+					TipiEquip.DARDO,
+					TipiEquip.FALCETTO,
+					TipiEquip.GIAVELLOTTO,
+					TipiEquip.LANCIA,
+					TipiEquip.MAZZA,
+					TipiEquip.PUGNALE,
+					TipiEquip.RANDELLO,
+					TipiEquip.SCIMITARRA,
+					TipiEquip.FIONDA);
 			break;
 		case GUERRIERO:
 			this.dado_vita = Dadi.D10;
 			
 			if (liv == 1) {
-			    vitaMassima = Dadi.D10.getValore() + statCos;
+			    vitaMassima = Dadi.D10.getValore() + modCos;
 			} else {
-			    int sum = Dadi.D10.getValore() + statCos;
+			    int sum = Dadi.D10.getValore() + modCos;
 			    for (int i = 1; i < liv; i++) {
-			        sum += (Dadi.D10.getValore() / 2 + 1) + statCos;
+			        sum += (Dadi.D10.getValore() / 2 + 1) + modCos;
 			    }
 			    vitaMassima = sum;
 			}
+			
 			//cotta di maglia o (b) armatura di cuoio, arco lungo e 20 frecce
 			this.armatura= Armature.COTTA_DI_MAGLIA;
 			//un’arma da guerra e uno scudo o (b) due armi da guerra
-			listArmi.add(Armi.SPADONE);
-			this.scudo = Scudi.SCUDO;
 			//una balestra leggera e 20 quadrelli o (b) due asce
-			listArmi.add(Armi.BALESTRA_LEGGERA);
+			this.scudo = Scudi.SCUDO;
+			addToList(listArmi, Armi.SPADONE, Armi.BALESTRA_LEGGERA);
 			//uno zaino da speleologo o (b) uno zaino da esploratore
 			//tiri salvezza
-			listTSattivi.add(Statistiche.FORZA);
-			listTSattivi.add(Statistiche.COSTITUZIONE);
+			addToList(listTSattivi, Statistiche.FORZA, Statistiche.COSTITUZIONE);
 			//competenze
-			listaCompetenze.add(TipiEquip.ARMATURA_LEGGERA);
-			listaCompetenze.add(TipiEquip.ARMATURA_MEDIA);
-			listaCompetenze.add(TipiEquip.ARMATURA_PESANTE);
-			listaCompetenze.add(TipiEquip.SCUDO);
-			listaCompetenze.add(TipiEquip.ARMA_A_DISTANZA_DA_GUERRA);
-			listaCompetenze.add(TipiEquip.ARMA_A_DISTANZA_SEMPLICE);
-			listaCompetenze.add(TipiEquip.ARMA_DA_MISCHIA_DA_GUERRA);
-			listaCompetenze.add(TipiEquip.ARMA_DA_MISCHIA_SEMPLICE);
+			addToList(listaCompetenze,
+					TipiEquip.ARMATURA_LEGGERA,
+					TipiEquip.ARMATURA_MEDIA,
+					TipiEquip.ARMATURA_PESANTE,
+					TipiEquip.SCUDO,
+					TipiEquip.ARMA_A_DISTANZA_DA_GUERRA,
+					TipiEquip.ARMA_A_DISTANZA_SEMPLICE,
+					TipiEquip.ARMA_DA_MISCHIA_DA_GUERRA,
+					TipiEquip.ARMA_DA_MISCHIA_SEMPLICE);
 			break;
 		case LADRO:
 			this.dado_vita = Dadi.D8;
 			
 			if (liv == 1) {
-			    vitaMassima = Dadi.D8.getValore() + statCos;
+			    vitaMassima = Dadi.D8.getValore() + modCos;
 			} else {
-			    int sum = Dadi.D8.getValore() + statCos;
+			    int sum = Dadi.D8.getValore() + modCos;
 			    for (int i = 1; i < liv; i++) {
-			        sum += (Dadi.D8.getValore() / 2 + 1) + statCos;
+			        sum += (Dadi.D8.getValore() / 2 + 1) + modCos;
 			    }
 			    vitaMassima = sum;
 			}
 			//uno stocco o una spada corta
-			listArmi.add(Armi.STOCCO);
 			//un arco corto e una faretra con 20 frecce o una spada corta
-			listArmi.add(Armi.ARCO_CORTO);
-			equip.add(Equipaggiamento.FARETRA);
-			//uno zaino da rapinatore, uno zaino da speleologo o uno zaino da esploratore
 			//Armatura di cuoio, due pugnali, e attrezzi da ladro
+			addToList(listArmi,
+					Armi.STOCCO,
+					Armi.ARCO_CORTO,
+					Armi.PUGNALE,
+					Armi.PUGNALE);
 			this.armatura= Armature.CUOIO;
-			listArmi.add(Armi.PUGNALE);
-			listArmi.add(Armi.PUGNALE);
-			equip.add(Equipaggiamento.ARNESI_DA_SCASSO);
 			this.scudo = null;
+			//uno zaino da rapinatore, uno zaino da speleologo o uno zaino da esploratore
+			addToList(equip,
+					Equipaggiamento.FARETRA,
+					Equipaggiamento.ARNESI_DA_SCASSO);
 			//tiri salvezza
-			listTSattivi.add(Statistiche.DESTREZZA);
-			listTSattivi.add(Statistiche.INTELLIGENZA);
+			addToList(listTSattivi,
+					Statistiche.DESTREZZA,
+					Statistiche.INTELLIGENZA);
 			//competenze
-			listaCompetenze.add(TipiEquip.ARMATURA_LEGGERA);
-			listaCompetenze.add(TipiEquip.ARMA_DA_MISCHIA_SEMPLICE);
-			listaCompetenze.add(TipiEquip.BALESTRA_A_MANO);
-			listaCompetenze.add(TipiEquip.SPADA_CORTA);
-			listaCompetenze.add(TipiEquip.SPADA_LUNGA);
-			listaCompetenze.add(TipiEquip.STOCCO);
+			addToList(listaCompetenze,
+					TipiEquip.ARMATURA_LEGGERA,
+					TipiEquip.ARMA_DA_MISCHIA_SEMPLICE,
+					TipiEquip.BALESTRA_A_MANO,
+					TipiEquip.SPADA_CORTA,
+					TipiEquip.SPADA_LUNGA,
+					TipiEquip.STOCCO);
 			break;
 		case MAGO:
 			this.dado_vita = Dadi.D6;
 			
 			if (liv == 1) {
-			    vitaMassima = Dadi.D6.getValore() + statCos;
+			    vitaMassima = Dadi.D6.getValore() + modCos;
 			} else {
-			    int sum = Dadi.D6.getValore() + statCos;
+			    int sum = Dadi.D6.getValore() + modCos;
 			    for (int i = 1; i < liv; i++) {
-			        sum += (Dadi.D6.getValore() / 2 + 1) + statCos;
+			        sum += (Dadi.D6.getValore() / 2 + 1) + modCos;
 			    }
 			    vitaMassima = sum;
 			}
 			//un bastone ferrato o un pugnale
-			listArmi.add(Armi.BASTONE_FERRATO);
+			addToList(listArmi,
+					Armi.BASTONE_FERRATO);
 			//una borsa per componenti o un focus arcano
-			equip.add(Equipaggiamento.BACCHETTA);
 			//una dotazione da studioso o (b) una dotazione da esploratore [studioso]
-			equip.add(Equipaggiamento.ZAINO);
-			equip.add(Equipaggiamento.LIBRO);
-			equip.add(Equipaggiamento.INCHIOSTRO);
-			equip.add(Equipaggiamento.PENNINO);
-			equip.add(Equipaggiamento.BACCHETTA);
+			//Un libro degli incantesimi
+			addToList(equip,
+					Equipaggiamento.BACCHETTA,
+					Equipaggiamento.ZAINO,
+					Equipaggiamento.LIBRO,
+					Equipaggiamento.INCHIOSTRO,
+					Equipaggiamento.PENNINO,
+					Equipaggiamento.BACCHETTA,
+					Equipaggiamento.SACCHETTO_DI_SABBIA,
+					Equipaggiamento.COLTELLINO,
+					Equipaggiamento.LIBRO_DEGLI_INCANTESIMI);
+			
 			for(int i = 0; i<10; i++) {
 				equip.add(Equipaggiamento.PERGAMENA);
 			}
-			equip.add(Equipaggiamento.SACCHETTO_DI_SABBIA);
-			equip.add(Equipaggiamento.COLTELLINO);
 			
-			//Un libro degli incantesimi
-			equip.add(Equipaggiamento.LIBRO_DEGLI_INCANTESIMI);
+			
 			//tiri salvezza
-			listTSattivi.add(Statistiche.INTELLIGENZA);
-			listTSattivi.add(Statistiche.SAGGEZZA);
+			addToList(listTSattivi,
+					Statistiche.INTELLIGENZA,
+					Statistiche.SAGGEZZA);
 			//competenze
-			listaCompetenze.add(TipiEquip.BALESTRA_A_MANO);
-			listaCompetenze.add(TipiEquip.BASTONE_FERRATO);
-			listaCompetenze.add(TipiEquip.DARDO);
-			listaCompetenze.add(TipiEquip.FIONDA);
-			listaCompetenze.add(TipiEquip.PUGNALE);
+			addToList(listaCompetenze,
+					TipiEquip.BALESTRA_A_MANO,
+					TipiEquip.BASTONE_FERRATO,
+					TipiEquip.DARDO,
+					TipiEquip.FIONDA,
+					TipiEquip.PUGNALE);
 			break;
 		case MONACO:
 			this.dado_vita = Dadi.D8;
 			
 			if (liv == 1) {
-			    vitaMassima = Dadi.D8.getValore() + statCos;
+			    vitaMassima = Dadi.D8.getValore() + modCos;
 			} else {
-			    int sum = Dadi.D8.getValore() + statCos;
+			    int sum = Dadi.D8.getValore() + modCos;
 			    for (int i = 1; i < liv; i++) {
-			        sum += (Dadi.D8.getValore() / 2 + 1) + statCos;
+			        sum += (Dadi.D8.getValore() / 2 + 1) + modCos;
 			    }
 			    vitaMassima = sum;
 			}
 			//una spada corta o qualsiasi arma semplice
-			listArmi.add(Armi.SPADA_CORTA);
+			addToList(listArmi,
+					Armi.SPADA_CORTA);
 			//uno zaino da speleologo o uno zaino da esploratore
 			//10 dardi
 			for(int i = 0; i<10; i++) {
-				listArmi.add(Armi.DARDO);
+				addToList(listArmi, Armi.DARDO);
 			}
 			this.scudo = null;
 			//tiri salvezza
-			listTSattivi.add(Statistiche.DESTREZZA);
-			listTSattivi.add(Statistiche.SAGGEZZA);
+			addToList(listTSattivi,
+					Statistiche.DESTREZZA,
+					Statistiche.SAGGEZZA);
 			//competenze
-			listaCompetenze.add(TipiEquip.ARMA_DA_MISCHIA_SEMPLICE);
-			listaCompetenze.add(TipiEquip.SPADA_CORTA);
+			addToList(listaCompetenze,
+					TipiEquip.ARMA_DA_MISCHIA_SEMPLICE,
+					TipiEquip.SPADA_CORTA);
 			break;
 		case PALADINO:
 			this.dado_vita = Dadi.D10;
 			if (liv == 1) {
-			    vitaMassima = Dadi.D10.getValore() + statCos;
+			    vitaMassima = Dadi.D10.getValore() + modCos;
 			} else {
-			    int sum = Dadi.D10.getValore() + statCos;
+			    int sum = Dadi.D10.getValore() + modCos;
 			    for (int i = 1; i < liv; i++) {
-			        sum += (Dadi.D10.getValore() / 2 + 1) + statCos;
+			        sum += (Dadi.D10.getValore() / 2 + 1) + modCos;
 			    }
 			    vitaMassima = sum;
 			}
 			//un’arma da guerra e uno scudo o due armi da guerra
-			listArmi.add(Armi.MORNING_STAR);
+			addToList(listArmi, Armi.MORNING_STAR);
 			this.scudo = Scudi.SCUDO;
 			//cinque giavellotti o qualsiasi arma semplice da mischia
 			for(int i = 0; i<5; i++) {
-				listArmi.add(Armi.GIAVELLOTTO);
+				addToList(listArmi, Armi.GIAVELLOTTO);
 			}
 			//uno zaino da sacerdote o uno zaino da esploratore
 			//Cotta di maglia e un simbolo sacro
 			this.armatura = Armature.COTTA_DI_MAGLIA;
-			equip.add(Equipaggiamento.EMBLEMA);
+			addToList(equip, Equipaggiamento.EMBLEMA);
 			//tiri salvezza
-			listTSattivi.add(Statistiche.SAGGEZZA);
-			listTSattivi.add(Statistiche.CARISMA);
+			addToList(listTSattivi,
+					Statistiche.SAGGEZZA,
+					Statistiche.CARISMA);
 			//competenze
-			listaCompetenze.add(TipiEquip.ARMATURA_LEGGERA);
-			listaCompetenze.add(TipiEquip.ARMATURA_MEDIA);
-			listaCompetenze.add(TipiEquip.ARMATURA_PESANTE);
-			listaCompetenze.add(TipiEquip.SCUDO);
-			listaCompetenze.add(TipiEquip.ARMA_A_DISTANZA_DA_GUERRA);
-			listaCompetenze.add(TipiEquip.ARMA_A_DISTANZA_SEMPLICE);
-			listaCompetenze.add(TipiEquip.ARMA_DA_MISCHIA_DA_GUERRA);
-			listaCompetenze.add(TipiEquip.ARMA_DA_MISCHIA_SEMPLICE);
+			addToList(listaCompetenze,
+					TipiEquip.ARMATURA_LEGGERA,
+					TipiEquip.ARMATURA_MEDIA,
+					TipiEquip.ARMATURA_PESANTE,
+					TipiEquip.SCUDO,
+					TipiEquip.ARMA_A_DISTANZA_DA_GUERRA,
+					TipiEquip.ARMA_A_DISTANZA_SEMPLICE,
+					TipiEquip.ARMA_DA_MISCHIA_DA_GUERRA,
+					TipiEquip.ARMA_DA_MISCHIA_SEMPLICE);
 			break;
 		case RANGER:
 			this.dado_vita = Dadi.D10;
 			
 			if (liv == 1) {
-			    vitaMassima = Dadi.D10.getValore() + statCos;
+			    vitaMassima = Dadi.D10.getValore() + modCos;
 			} else {
-			    int sum = Dadi.D10.getValore() + statCos;
+			    int sum = Dadi.D10.getValore() + modCos;
 			    for (int i = 1; i < liv; i++) {
-			        sum += (Dadi.D10.getValore() / 2 + 1) + statCos;
+			        sum += (Dadi.D10.getValore() / 2 + 1) + modCos;
 			    }
 			    vitaMassima = sum;
 			}
@@ -729,98 +743,111 @@ public class Pg {
 			//armatura a scaglie o armatura di cuoio
 			this.armatura= Armature.CORAZZA_DI_SCAGLIE;
 			//due spade corte o due armi semplici
-			listArmi.add(Armi.SPADA_CORTA);
-			listArmi.add(Armi.SPADA_CORTA);
+			addToList(listArmi,
+					Armi.SPADA_CORTA,
+					Armi.SPADA_CORTA);
 			//uno zaino da speleologo o uno zaino da esploratore
 			this.scudo = null;
 			//tiri salvezza
-			listTSattivi.add(Statistiche.FORZA);
-			listTSattivi.add(Statistiche.DESTREZZA);
+			addToList(listTSattivi,
+					Statistiche.FORZA,
+					Statistiche.DESTREZZA);
 			//competenze
-			listaCompetenze.add(TipiEquip.ARMATURA_LEGGERA);
-			listaCompetenze.add(TipiEquip.ARMATURA_MEDIA);
-			listaCompetenze.add(TipiEquip.SCUDO);
-			listaCompetenze.add(TipiEquip.ARMA_A_DISTANZA_DA_GUERRA);
-			listaCompetenze.add(TipiEquip.ARMA_A_DISTANZA_SEMPLICE);
-			listaCompetenze.add(TipiEquip.ARMA_DA_MISCHIA_DA_GUERRA);
-			listaCompetenze.add(TipiEquip.ARMA_DA_MISCHIA_SEMPLICE);
+			addToList(listaCompetenze,
+					TipiEquip.ARMATURA_LEGGERA,
+					TipiEquip.ARMATURA_MEDIA,
+					TipiEquip.SCUDO,
+					TipiEquip.ARMA_A_DISTANZA_DA_GUERRA,
+					TipiEquip.ARMA_A_DISTANZA_SEMPLICE,
+					TipiEquip.ARMA_DA_MISCHIA_DA_GUERRA,
+					TipiEquip.ARMA_DA_MISCHIA_SEMPLICE);
 			break;
 		case STREGONE:
 			this.dado_vita = Dadi.D6;
 			
 			if (liv == 1) {
-			    vitaMassima = Dadi.D6.getValore() + statCos;
+			    vitaMassima = Dadi.D6.getValore() + modCos;
 			} else {
-			    int sum = Dadi.D6.getValore() + statCos;
+			    int sum = Dadi.D6.getValore() + modCos;
 			    for (int i = 1; i < liv; i++) {
-			        sum += (Dadi.D6.getValore() / 2 + 1) + statCos;
+			        sum += (Dadi.D6.getValore() / 2 + 1) + modCos;
 			    }
 			    vitaMassima = sum;
 			}
 			//una balestra leggera e 20 quadrelli o una qualsiasi arma semplice
-			listArmi.add(Armi.BALESTRA_LEGGERA);
+			addToList(listArmi,
+					Armi.BALESTRA_LEGGERA);
 			//una borsa per componenti o (b) un focus arcano
-			equip.add(Equipaggiamento.BASTONE);
 			//una dotazione da avventuriero o (b) una dotazione da esploratore [ora avventuriero]
-			equip.add(Equipaggiamento.ZAINO);
-			equip.add(Equipaggiamento.PIEDE_DI_PORCO);
-			equip.add(Equipaggiamento.MARTELLO);
+			addToList(equip,
+					Equipaggiamento.BASTONE,
+					Equipaggiamento.ZAINO,
+					Equipaggiamento.PIEDE_DI_PORCO,
+					Equipaggiamento.MARTELLO,
+					Equipaggiamento.ACCIARINO_E_PIETRA_FOCAIA,
+					Equipaggiamento.OTRE);
+			
 			for(int i = 0; i<10; i++) {
-			equip.add(Equipaggiamento.CHIODO_DA_ROCCIATORE);
-			equip.add(Equipaggiamento.RAZIONE);
-			equip.add(Equipaggiamento.TORCIA);
+				addToList(equip,
+						Equipaggiamento.CHIODO_DA_ROCCIATORE,
+						Equipaggiamento.RAZIONE,
+						Equipaggiamento.TORCIA);
 			}
-			equip.add(Equipaggiamento.ACCIARINO_E_PIETRA_FOCAIA);
-			equip.add(Equipaggiamento.OTRE);
 			//Due pugnali
 			this.scudo = null;
 			//tiri salvezza
-			listTSattivi.add(Statistiche.COSTITUZIONE);
-			listTSattivi.add(Statistiche.CARISMA);
+			addToList(listTSattivi,
+					Statistiche.COSTITUZIONE,
+					Statistiche.CARISMA);
 			//competenze
-			listaCompetenze.add(TipiEquip.BALESTRA_LEGGERA);
-			listaCompetenze.add(TipiEquip.BASTONE_FERRATO);
-			listaCompetenze.add(TipiEquip.DARDO);
-			listaCompetenze.add(TipiEquip.FIONDA);
-			listaCompetenze.add(TipiEquip.PUGNALE);
+			addToList(listaCompetenze,
+					TipiEquip.BALESTRA_LEGGERA,
+					TipiEquip.BASTONE_FERRATO,
+					TipiEquip.DARDO,
+					TipiEquip.FIONDA,
+					TipiEquip.PUGNALE);
 			break;
 		case WARLOCK:
 			this.dado_vita = Dadi.D8;
 			
 			if (liv == 1) {
-			    vitaMassima = Dadi.D8.getValore() + statCos;
+			    vitaMassima = Dadi.D8.getValore() + modCos;
 			} else {
-			    int sum = Dadi.D8.getValore() + statCos;
+			    int sum = Dadi.D8.getValore() + modCos;
 			    for (int i = 1; i < liv; i++) {
-			        sum += (Dadi.D8.getValore() / 2 + 1) + statCos;
+			        sum += (Dadi.D8.getValore() / 2 + 1) + modCos;
 			    }
 			    vitaMassima = sum;
 			}
 			// una balestra leggera e 20 quadrelli o una qualsiasi arma semplice.
-			listArmi.add(Armi.BALESTRA_LEGGERA);
+			addToList(listArmi, Armi.BALESTRA_LEGGERA);
 			//una borsa per componenti o (b) un focus arcano.
-			equip.add(Equipaggiamento.CRISTALLO);
-			//una dotazione da studioso o (b) una dotazione da avventuriero. [ora solo avventuriero]
-			equip.add(Equipaggiamento.ZAINO);
-			equip.add(Equipaggiamento.PIEDE_DI_PORCO);
-			equip.add(Equipaggiamento.MARTELLO);
+			addToList(equip,
+					//una dotazione da studioso o (b) una dotazione da avventuriero. [ora solo avventuriero]
+					Equipaggiamento.CRISTALLO,
+					Equipaggiamento.ZAINO,
+					Equipaggiamento.PIEDE_DI_PORCO,
+					Equipaggiamento.MARTELLO,
+					Equipaggiamento.ACCIARINO_E_PIETRA_FOCAIA,
+					Equipaggiamento.OTRE);
 			for(int i = 0; i<10; i++) {
-			equip.add(Equipaggiamento.CHIODO_DA_ROCCIATORE);
-			equip.add(Equipaggiamento.RAZIONE);
-			equip.add(Equipaggiamento.TORCIA);
+				addToList(equip,
+						Equipaggiamento.CHIODO_DA_ROCCIATORE,
+						Equipaggiamento.RAZIONE,
+						Equipaggiamento.TORCIA);
 			}
-			equip.add(Equipaggiamento.ACCIARINO_E_PIETRA_FOCAIA);
-			equip.add(Equipaggiamento.OTRE);
 			//Un'armatura di cuoio, una qualsiasi arma semplice e due pugnali.
 			this.armatura= Armature.CUOIO;
 			this.scudo = null;
 			//tiri salvezza
-			listTSattivi.add(Statistiche.SAGGEZZA);
-			listTSattivi.add(Statistiche.CARISMA);
+			addToList(listTSattivi,
+					Statistiche.SAGGEZZA,
+					Statistiche.CARISMA);
 			//competenze
-			listaCompetenze.add(TipiEquip.ARMATURA_LEGGERA);
-			listaCompetenze.add(TipiEquip.ARMA_DA_MISCHIA_SEMPLICE);
-			listaCompetenze.add(TipiEquip.ARMA_A_DISTANZA_SEMPLICE);
+			addToList(listaCompetenze,
+					TipiEquip.ARMATURA_LEGGERA,
+					TipiEquip.ARMA_DA_MISCHIA_SEMPLICE,
+					TipiEquip.ARMA_A_DISTANZA_SEMPLICE);
 			break;
 		default:
 			break;
@@ -938,7 +965,7 @@ public class Pg {
 		this.abilitaAttive = abilitaAttive;
 		this.competenze = listaCompetenze;
 		this.privilegi = listaPrivilegi;
-		this.ispizazione = false;
+		this.ispirazione = false;
 		this.linguaggi = listaLinguaggi;
 		this.iniziativa = 0;
 		this.PF_max = (int) vitaMassima;
@@ -957,6 +984,10 @@ public class Pg {
 		this.difetti = difetti;
 	}
 
-	
-	
+	public static <T extends Enum<T>> void addToList(List<T> equip, T... elementi) {
+	    for (T elemento : elementi) {
+	        equip.add(elemento);
+	    }
+	}
+
 }

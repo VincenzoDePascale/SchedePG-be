@@ -13,7 +13,7 @@ public enum Armature {
 	CUOIO("armatura cuoio", TipiEquip.ARMATURA_LEGGERA,
 			"Il pettorale e le spalline che compongono questa armatura sono fatti di cuoio indurito e bollito nell'olio. Il resto dell'armatura è fatto di materiali più morbidi e flessibili.",
 			10, Moneta.MO, 11, false, 5),
-	CUOIO_BORCHIATO("armatura imbottita", TipiEquip.ARMATURA_LEGGERA,
+	CUOIO_BORCHIATO("cuoio borchiato", TipiEquip.ARMATURA_LEGGERA,
 			"Un'armatura di cuoio borchiato è fatta di cuoio resistente ma flessibile, rinforzato con borchie o spuntoni di metallo.",
 			45, Moneta.MO, 12, false, 6.5),
 
@@ -26,7 +26,7 @@ public enum Armature {
 	CORAZZA_DI_SCAGLIE("corazza di scaglie", TipiEquip.ARMATURA_MEDIA,
 			"Questa armatura è composta da un corpetto e da gambali (e forse da una gonna separata) di cuoio ed è ricoperta di pezzi di metallo leggermente sovrapposti, proprio come le scaglie di un pesce. Include anche due guanti d'arme.",
 			50, Moneta.MO, 14, true, 22.5),
-	CORAZZA_DI_PIASTRE("corazza di piasctre", TipiEquip.ARMATURA_MEDIA,
+	CORAZZA_DI_PIASTRE("corazza di piastre", TipiEquip.ARMATURA_MEDIA,
 			"Questa armatura è composta da un pettorale di metallo montato su uno strato di cuoio flessibile. Anche se lascia le gambe e le braccia relativamente scoperte, fornisce una buona protezione degli organi vitali del portatore, lasciandolo anche relativamente privo di ingombro.",
 			400, Moneta.MO, 14, false, 10),
 	MEZZA_ARMATURA("mezza armatura", TipiEquip.ARMATURA_MEDIA,
@@ -112,4 +112,14 @@ public enum Armature {
 		result.put("peso", peso);
 		return result;
 	}
+	
+	public static Armature getEnumByNome(String nome) {
+        for (Armature data : Armature.values()) {
+            if (data.getNome().equalsIgnoreCase(nome)) {
+                return data;
+            }
+        }
+        throw new IllegalArgumentException("Nessuna armatura con questo nome: " + nome);
+    }
+	
 }

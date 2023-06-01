@@ -18,6 +18,7 @@ import com.VincenzoDePascale.schedePG.model.Pg;
 public interface PgRepository extends CrudRepository<Pg, Long> {
 
 	//id
+	public Optional<Pg> findById(Long Id);
 	boolean existsById(Long Id);
 
 	//giocatore

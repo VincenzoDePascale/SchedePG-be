@@ -1,5 +1,6 @@
 package com.VincenzoDePascale.schedePG.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,11 +19,26 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.VincenzoDePascale.schedePG.auth.entity.User;
 import com.VincenzoDePascale.schedePG.auth.repository.UserRepository;
+import com.VincenzoDePascale.schedePG.list.Abilita;
 import com.VincenzoDePascale.schedePG.list.Allineamenti;
+import com.VincenzoDePascale.schedePG.list.Armature;
 import com.VincenzoDePascale.schedePG.list.Classi;
+import com.VincenzoDePascale.schedePG.list.Linguaggi;
 import com.VincenzoDePascale.schedePG.list.Razze;
+import com.VincenzoDePascale.schedePG.list.Scudi;
+import com.VincenzoDePascale.schedePG.list.Statistiche;
+import com.VincenzoDePascale.schedePG.list.TipiEquip;
 import com.VincenzoDePascale.schedePG.model.Pg;
 import com.VincenzoDePascale.schedePG.payload.PgDto;
+import com.VincenzoDePascale.schedePG.payload.updateAbilitaPgDto;
+import com.VincenzoDePascale.schedePG.payload.updateArmaturaPgDto;
+import com.VincenzoDePascale.schedePG.payload.updateCompetenzePgDto;
+import com.VincenzoDePascale.schedePG.payload.updateIspirazionePgDto;
+import com.VincenzoDePascale.schedePG.payload.updateLinguaggiPgDto;
+import com.VincenzoDePascale.schedePG.payload.updateNotePgDto;
+import com.VincenzoDePascale.schedePG.payload.updateRicchezzaPgDto;
+import com.VincenzoDePascale.schedePG.payload.updateTsPgDto;
+import com.VincenzoDePascale.schedePG.repository.PgRepository;
 import com.VincenzoDePascale.schedePG.service.PgService;
 
 @CrossOrigin(origins = "http://localhost:3000", maxAge = 360000, allowCredentials = "true")
@@ -32,7 +48,9 @@ public class PgController {
 
 	@Autowired
 	PgService pgService;
-	
+	@Autowired
+	private PgRepository pgRepo;
+
 	@Autowired
 	UserRepository userRepo;
 
@@ -55,10 +73,6 @@ public class PgController {
 	public ResponseEntity<?> searchPgBygiocatoreUsername(@PathVariable("username") String username) {
 		return new ResponseEntity<>(pgService.searchPgBygiocatoreUsername(username), HttpStatus.OK);
 	}
-	
-//	@GetMapping("/uspg/{username}/{id}")
-//	@PreAuthorize("isAuthenticated()")
-//	
 
 	@GetMapping("/nomepg/{nomepg}")
 	@PreAuthorize("isAuthenticated()")
@@ -89,8 +103,6 @@ public class PgController {
 	public ResponseEntity<?> findByLivello(@PathVariable("livello") int livello) {
 		return new ResponseEntity<>(pgService.findByLivello(livello), HttpStatus.OK);
 	}
-	
-	
 
 	// POST - salvataggio
 
@@ -99,22 +111,209 @@ public class PgController {
 	public ResponseEntity<?> savePg(@RequestBody PgDto data) {
 		User u = userRepo.findByUsername(data.getNomeUtente()).get();
 		Pg pg = new Pg(u, data.getNomePersonaggio(), Allineamenti.getEnumByTipo(data.getAllineamento()),
-				data.getForza(), data.getDestrezza(), data.getCostituzione(),
-				data.getIntelligenza(), data.getSaggezza(), data.getCarisma(),
-				Razze.getEnumByTipo(data.getRazza()), Classi.getEnumByTipo(data.getClasse()) , data.getAbilitaAttive(), data.getLivello(),
-				data.getBackground(), data.getTratti_caratteriali(), data.getIdeali(),
-				data.getLegami(), data.getDifetti());
+				data.getForza(), data.getDestrezza(), data.getCostituzione(), data.getIntelligenza(),
+				data.getSaggezza(), data.getCarisma(), Razze.getEnumByTipo(data.getRazza()),
+				Classi.getEnumByTipo(data.getClasse()), data.getAbilitaAttive(), data.getLivello(),
+				data.getBackground(), data.getTratti_caratteriali(), data.getIdeali(), data.getLegami(),
+				data.getDifetti());
 		return new ResponseEntity<>(pgService.savePg(pg), HttpStatus.CREATED);
 	}
 
 	// PUT - modifica
 
-	@PutMapping("/update")
 	@PreAuthorize("isAuthenticated()")
-	//fai il search
-	public ResponseEntity<?> updatePg(@RequestBody Pg pg) {
-		return new ResponseEntity<>(pgService.updatePg(pg), HttpStatus.CREATED);
+	@PutMapping(value = "/upgradeIspirazione")
+	public ResponseEntity<?> updateIspirazionePg(@RequestBody updateIspirazionePgDto data) {
+
+		Pg pg = pgRepo.findById(data.getIdPg()).orElse(null);
+
+		if (pg == null) {
+			return new ResponseEntity<>("PG non trovato", HttpStatus.NOT_FOUND);
+		}
+
+		if (data.getIspirazione() != true) {
+			pg.setIspirazione(true);
+		} else {
+			pg.setIspirazione(false);
+		}
+
+		Pg savedPg = pgService.savePg(pg);
+		return new ResponseEntity<>(savedPg, HttpStatus.OK);
 	}
+
+	@PreAuthorize("isAuthenticated()")
+	@PutMapping(value = "/upgradeAbilita")
+	public ResponseEntity<?> updateAbilitaPg(@RequestBody updateAbilitaPgDto data) {
+
+		Pg pg = pgRepo.findById(data.getIdPg()).orElse(null);
+
+		if (pg == null) {
+			return new ResponseEntity<>("PG non trovato", HttpStatus.NOT_FOUND);
+		}
+
+		if (data.getAbilita() != null && data.getAbilita() != pg.getAbilitaAttive()) {
+			pg.setAbilitaAttive(data.getAbilita());
+		}
+
+		Pg savedPg = pgService.savePg(pg);
+		return new ResponseEntity<>(savedPg, HttpStatus.OK);
+	}
+
+	@PreAuthorize("isAuthenticated()")
+	@PutMapping(value = "/upgradeTS")
+	public ResponseEntity<?> updateTiriSalvezzaPg(@RequestBody updateTsPgDto data) {
+
+		Pg pg = pgRepo.findById(data.getIdPg()).orElse(null);
+
+		if (pg == null) {
+			return new ResponseEntity<>("PG non trovato", HttpStatus.NOT_FOUND);
+		}
+
+		if (data.getTiriSalvezza() != null) {
+			List<Statistiche> newTs = new ArrayList<>();
+			for (String statistica : data.getTiriSalvezza()) {
+				Statistiche enumTS = Statistiche.getEnumByStatistica(statistica);
+				if (enumTS != null) {
+					newTs.add(enumTS);
+				}
+			}
+			pg.setTSattivi(newTs);
+		}
+
+		Pg savedPg = pgService.savePg(pg);
+		return new ResponseEntity<>(savedPg, HttpStatus.OK);
+	}
+
+	@PreAuthorize("isAuthenticated()")
+	@PutMapping(value = "/upgradeLingue")
+	public ResponseEntity<?> updateLinguaggiPg(@RequestBody updateLinguaggiPgDto data) {
+
+		Pg pg = pgRepo.findById(data.getIdPg()).orElse(null);
+
+		if (pg == null) {
+			return new ResponseEntity<>("PG non trovato", HttpStatus.NOT_FOUND);
+		}
+
+		if (data.getLinguaggi() != null) {
+			List<Linguaggi> newLinguaggi = new ArrayList<>();
+			for (String linguaggio : data.getLinguaggi()) {
+				Linguaggi enumLinguaggio = Linguaggi.getEnumByLingua(linguaggio);
+				if (enumLinguaggio != null) {
+					newLinguaggi.add(enumLinguaggio);
+				}
+			}
+			pg.setLinguaggi(newLinguaggi);
+		}
+
+		Pg savedPg = pgService.savePg(pg);
+		return new ResponseEntity<>(savedPg, HttpStatus.OK);
+	}
+
+	@PreAuthorize("isAuthenticated()")
+	@PutMapping(value = "/upgradeCompetenze")
+	public ResponseEntity<?> updateCompetenzePg(@RequestBody updateCompetenzePgDto data) {
+
+		Pg pg = pgRepo.findById(data.getIdPg()).orElse(null);
+
+		if (pg == null) {
+			return new ResponseEntity<>("PG non trovato", HttpStatus.NOT_FOUND);
+		}
+
+		if (data.getCompetenze() != null) {
+			List<TipiEquip> newCompetenze = new ArrayList<>();
+			for (String competenza : data.getCompetenze()) {
+				TipiEquip enumCompetenza = TipiEquip.getEnumByNome(competenza);
+				if (enumCompetenza != null) {
+					newCompetenze.add(enumCompetenza);
+				}
+			}
+			pg.setCompetenze(newCompetenze);
+		}
+
+		Pg savedPg = pgService.savePg(pg);
+		return new ResponseEntity<>(savedPg, HttpStatus.OK);
+	}
+
+	@PreAuthorize("isAuthenticated()")
+	@PutMapping(value = "/upgradeArmor")
+	public ResponseEntity<?> updateArmorPg(@RequestBody updateArmaturaPgDto data) {
+
+		Pg pg = pgRepo.findById(data.getIdPg()).get();
+
+		if (pg == null) {
+			return new ResponseEntity<>("PG non trovato", HttpStatus.NOT_FOUND);
+		}
+
+		if (data.getArmatura() != "" && data.getArmatura() != null) {
+			pg.setArmatura(Armature.getEnumByNome(data.getArmatura()));
+		} else {
+			pg.setArmatura(null);
+		}
+
+		if (data.getScudo() != "" && data.getScudo() != null) {
+			pg.setScudo(Scudi.getEnumByNome(data.getScudo()));
+		} else {
+			pg.setScudo(null);
+		}
+
+		return new ResponseEntity<>(pgService.savePg(pg), HttpStatus.OK);
+	}
+
+	@PreAuthorize("isAuthenticated()")
+	@PutMapping(value = "/upgradeMonete")
+	public ResponseEntity<?> updateMonetePg(@RequestBody updateRicchezzaPgDto data) {
+
+		Pg pg = pgRepo.findById(data.getIdPg()).get();
+
+		if (pg == null) {
+			return new ResponseEntity<>("PG non trovato", HttpStatus.NOT_FOUND);
+		}
+
+		pg.setMonete_rame(data.getMoneteRame());
+
+		pg.setMonete_argento(data.getMoneteArgento());
+
+		pg.setMonete_oro(data.getMoneteOro());
+
+		pg.setMonete_platino(data.getMonetePlatino());
+
+		return new ResponseEntity<>(pgService.savePg(pg), HttpStatus.OK);
+	}
+
+	@PreAuthorize("isAuthenticated()")
+	@PutMapping(value = "/upgradeNote")
+	public ResponseEntity<?> updateNotePg(@RequestBody updateNotePgDto data) {
+
+		Pg pg = pgRepo.findById(data.getIdPg()).get();
+
+		if (pg == null) {
+			return new ResponseEntity<>("PG non trovato", HttpStatus.NOT_FOUND);
+		}
+
+		if (data.getBackground() != null) {
+			pg.setBackground(data.getBackground());
+		}
+
+		if (data.getTratti_caratteriali() != null) {
+			pg.setTratti_caratteriali(data.getTratti_caratteriali());
+		}
+
+		if (data.getIdeali() != null) {
+			pg.setIdeali(data.getIdeali());
+		}
+
+		if (data.getLegami() != null) {
+			pg.setLegami(data.getLegami());
+		}
+
+		if (data.getDifetti() != null) {
+			pg.setDifetti(data.getDifetti());
+		}
+
+		return new ResponseEntity<>(pgService.savePg(pg), HttpStatus.OK);
+	}
+
+	// DELETE
 
 	@DeleteMapping("/delete/{id}")
 	@PreAuthorize("isAuthenticated()")

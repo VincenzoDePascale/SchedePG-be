@@ -212,4 +212,13 @@ public enum Equipaggiamento {
         result.put("peso", peso);
         return result;
     }
+    
+    public static Equipaggiamento getEnumByNome(String tipo) {
+        for (Equipaggiamento data : Equipaggiamento.values()) {
+            if (data.getNome().equalsIgnoreCase(tipo)) {
+                return data;
+            }
+        }
+        throw new IllegalArgumentException("Nessun eqipaggiamento trovato con questo nome: " + tipo);
+    }
 }
