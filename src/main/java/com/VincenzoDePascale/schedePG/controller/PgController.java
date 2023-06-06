@@ -36,6 +36,7 @@ import com.VincenzoDePascale.schedePG.payload.updateIspirazionePgDto;
 import com.VincenzoDePascale.schedePG.payload.updateLinguaggiPgDto;
 import com.VincenzoDePascale.schedePG.payload.updateNotePgDto;
 import com.VincenzoDePascale.schedePG.payload.updateRicchezzaPgDto;
+import com.VincenzoDePascale.schedePG.payload.updateStatistichePgDto;
 import com.VincenzoDePascale.schedePG.payload.updateTsPgDto;
 import com.VincenzoDePascale.schedePG.payload.updateVitaPgDto;
 import com.VincenzoDePascale.schedePG.repository.PgRepository;
@@ -139,6 +140,31 @@ public class PgController {
 
 		Pg savedPg = pgService.savePg(pg);
 		return new ResponseEntity<>(savedPg, HttpStatus.OK);
+	}
+	
+	@PreAuthorize("isAuthenticated()")
+	@PutMapping(value = "/upgradeStatistiche")
+	public ResponseEntity<?> updateMonetePg(@RequestBody updateStatistichePgDto data) {
+
+		Pg pg = pgRepo.findById(data.getIdPg()).get();
+
+		if (pg == null) {
+			return new ResponseEntity<>("PG non trovato", HttpStatus.NOT_FOUND);
+		}
+
+		pg.setForza(data.getForza());
+
+		pg.setDestrezza(data.getDestrezza());
+
+		pg.setCostituzione(data.getCostituzione());
+
+		pg.setIntelligenza(data.getIntelligenza());
+		
+		pg.setSaggezza(data.getSaggezza());
+		
+		pg.setCarisma(data.getCarisma());
+
+		return new ResponseEntity<>(pgService.savePg(pg), HttpStatus.OK);
 	}
 
 	@PreAuthorize("isAuthenticated()")
