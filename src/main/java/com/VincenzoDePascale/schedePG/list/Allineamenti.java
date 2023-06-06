@@ -6,17 +6,7 @@ import java.util.Map;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 public enum Allineamenti {
-	
-//	LEGALE_BUONO,
-//	LEGALE_NEUTRALE,
-//	LEGALE_MALVAGIO,
-//	NEUTRALE_BUONO,
-//	NEUTRALE,
-//	NEUTRALE_MALVAGIO,
-//	CAOTICO_BUONO,
-//	CAOTICO_NEUTRALE,
-//	CAOTICO_MALVAGIO;
-	
+
 	LEGALE_BUONO("legale buono"),
 	LEGALE_NEUTRALE("legale neutrale"),
 	LEGALE_MALVAGIO("legale malvagio"),
