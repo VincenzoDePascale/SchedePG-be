@@ -1,8 +1,8 @@
 # SchedePG-be
 
-Questo progetto è un backend (BE) sviluppato in Java Spring Boot per consentire a ogni giocatore di D&D 5e di avere sempre con sé tutte le sue schede del personaggio e generare nuovi personaggi in tempi più brevi rispetto allo standard.
+Questo progetto è un backend sviluppato in Java Spring Boot per consentire a ogni giocatore di D&D 5e di avere sempre con sé tutte le sue schede del personaggio e generare nuovi personaggi in tempi più brevi rispetto allo standard.
 
-## Gestione del BE
+## Gestione del Backend
 
 Il BE è stato gestito con solo due entità:
 
