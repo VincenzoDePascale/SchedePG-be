@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.VincenzoDePascale.schedePG.auth.entity.User;
 import com.VincenzoDePascale.schedePG.auth.repository.UserRepository;
-import com.VincenzoDePascale.schedePG.list.Abilita;
 import com.VincenzoDePascale.schedePG.list.Allineamenti;
 import com.VincenzoDePascale.schedePG.list.Armature;
 import com.VincenzoDePascale.schedePG.list.Classi;
@@ -38,6 +37,7 @@ import com.VincenzoDePascale.schedePG.payload.updateLinguaggiPgDto;
 import com.VincenzoDePascale.schedePG.payload.updateNotePgDto;
 import com.VincenzoDePascale.schedePG.payload.updateRicchezzaPgDto;
 import com.VincenzoDePascale.schedePG.payload.updateTsPgDto;
+import com.VincenzoDePascale.schedePG.payload.updateVitaPgDto;
 import com.VincenzoDePascale.schedePG.repository.PgRepository;
 import com.VincenzoDePascale.schedePG.service.PgService;
 
@@ -142,24 +142,6 @@ public class PgController {
 	}
 
 	@PreAuthorize("isAuthenticated()")
-	@PutMapping(value = "/upgradeAbilita")
-	public ResponseEntity<?> updateAbilitaPg(@RequestBody updateAbilitaPgDto data) {
-
-		Pg pg = pgRepo.findById(data.getIdPg()).orElse(null);
-
-		if (pg == null) {
-			return new ResponseEntity<>("PG non trovato", HttpStatus.NOT_FOUND);
-		}
-
-		if (data.getAbilita() != null && data.getAbilita() != pg.getAbilitaAttive()) {
-			pg.setAbilitaAttive(data.getAbilita());
-		}
-
-		Pg savedPg = pgService.savePg(pg);
-		return new ResponseEntity<>(savedPg, HttpStatus.OK);
-	}
-
-	@PreAuthorize("isAuthenticated()")
 	@PutMapping(value = "/upgradeTS")
 	public ResponseEntity<?> updateTiriSalvezzaPg(@RequestBody updateTsPgDto data) {
 
@@ -178,6 +160,24 @@ public class PgController {
 				}
 			}
 			pg.setTSattivi(newTs);
+		}
+
+		Pg savedPg = pgService.savePg(pg);
+		return new ResponseEntity<>(savedPg, HttpStatus.OK);
+	}
+
+	@PreAuthorize("isAuthenticated()")
+	@PutMapping(value = "/upgradeAbilita")
+	public ResponseEntity<?> updateAbilitaPg(@RequestBody updateAbilitaPgDto data) {
+
+		Pg pg = pgRepo.findById(data.getIdPg()).orElse(null);
+
+		if (pg == null) {
+			return new ResponseEntity<>("PG non trovato", HttpStatus.NOT_FOUND);
+		}
+
+		if (data.getAbilita() != null && data.getAbilita() != pg.getAbilitaAttive()) {
+			pg.setAbilitaAttive(data.getAbilita());
 		}
 
 		Pg savedPg = pgService.savePg(pg);
@@ -254,6 +254,35 @@ public class PgController {
 			pg.setScudo(Scudi.getEnumByNome(data.getScudo()));
 		} else {
 			pg.setScudo(null);
+		}
+
+		return new ResponseEntity<>(pgService.savePg(pg), HttpStatus.OK);
+	}
+
+	@PreAuthorize("isAuthenticated()")
+	@PutMapping(value = "/upgradeVita")
+	public ResponseEntity<?> updateVitaPg(@RequestBody updateVitaPgDto data) {
+
+		Pg pg = pgRepo.findById(data.getIdPg()).get();
+
+		if (pg == null) {
+			return new ResponseEntity<>("PG non trovato", HttpStatus.NOT_FOUND);
+		}
+
+		if(data.getPfAttuali() > pg.getPF_max()) {
+			pg.setPF(pg.getPF_max());
+		}else {
+			pg.setPF(data.getPfAttuali());
+		}
+
+		if(data.getPfMassimi() != pg.getPF_max()) {
+			pg.setPF_max(data.getPfMassimi());
+		}
+		
+		if(data.getPfTemporanei() > pg.getPF_max()) {
+			pg.setPF_temporanei(pg.getPF_max());
+		}else {
+			pg.setPF_temporanei(data.getPfTemporanei());
 		}
 
 		return new ResponseEntity<>(pgService.savePg(pg), HttpStatus.OK);

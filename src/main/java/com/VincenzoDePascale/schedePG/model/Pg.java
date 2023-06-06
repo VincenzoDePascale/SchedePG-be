@@ -990,4 +990,11 @@ public class Pg {
 	    }
 	}
 
+	//alla
+	//prossima
+	//riga
+	//raggiungo
+	//il
+	//mio
+	//obbiettivo
 }
