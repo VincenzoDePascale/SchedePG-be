@@ -996,5 +996,5 @@ public class Pg {
 	//raggiungo
 	//il
 	//mio
-	//obbiettivo
+	//obiettivo
 }
