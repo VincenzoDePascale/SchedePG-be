@@ -16,7 +16,7 @@ public enum Classi {
 	MONACO("monaco"),
 	PALADINO("paladino"),
 	RANGER("ranger"),
-	STREGONE("stragone"),
+	STREGONE("stregone"),
 	WARLOCK("warlock");
 
 	private String tipo;
