@@ -104,6 +104,9 @@ public enum Equipaggiamento {
 	VELENO("veleno di base",TipiEquip.BASE, "Un personaggio può usare il veleno contenuto in questa fiala per rivestire un'arma tagliente o perforante o un massimo di tre munizioni. Per applicare il veleno è richiesta un'azione. Una creatura colpita dall'arma o dalle munizioni avvelenate deve superare un tiro salvezza su Costituzione con CD 10, altrimenti subirà 1d4 danni da veleno. Una volta applicato, il veleno mantiene la sua potenza per 1 minuto prima di essiccarsi.", 100, Moneta.MO, 0),
 	VESTE("veste",TipiEquip.BASE, "descrizione veste", 1, Moneta.MO, 2),
 	ZAINO("zaino",TipiEquip.BASE, "capienza: 1 cubo con spigolo di 30 cm/15 kg di equipaggiamento; un personaggio può anche legare alcuni oggetti come un giaciglio o un rotolo di corda all'esterno dello zaino.", 2, Moneta.MO, 2.5),
+	ZAINO_DA_SPELEOLOGO("zaino da speleologo",TipiEquip.BASE, "descrizione zaino da speleologo", 0, Moneta.ZZ, 2.5),
+	ZAINO_DA_ESPLORATORE("zaino da esploratore",TipiEquip.BASE, "descrizione zaino da esploratore", 2, Moneta.ZZ, 2.5),
+	ZAINO_DA_SACERDOTE("zaino da sacerdote",TipiEquip.BASE, "descrizione zaino da sacerdote", 2, Moneta.ZZ, 2.5),
 	
 	//focus arcano
 	BACCHETTA("bacchetta",TipiEquip.FOCUS_ARCANO, "descrizione bacchetta", 10, Moneta.MO, 0.5),

@@ -25,6 +25,7 @@ import com.VincenzoDePascale.schedePG.list.Classi;
 import com.VincenzoDePascale.schedePG.list.Linguaggi;
 import com.VincenzoDePascale.schedePG.list.Razze;
 import com.VincenzoDePascale.schedePG.list.Scudi;
+import com.VincenzoDePascale.schedePG.list.Specializzazioni;
 import com.VincenzoDePascale.schedePG.list.Statistiche;
 import com.VincenzoDePascale.schedePG.list.TipiEquip;
 import com.VincenzoDePascale.schedePG.model.Pg;
@@ -114,7 +115,7 @@ public class PgController {
 		Pg pg = new Pg(u, data.getNomePersonaggio(), Allineamenti.getEnumByTipo(data.getAllineamento()),
 				data.getForza(), data.getDestrezza(), data.getCostituzione(), data.getIntelligenza(),
 				data.getSaggezza(), data.getCarisma(), Razze.getEnumByTipo(data.getRazza()),
-				Classi.getEnumByTipo(data.getClasse()), data.getAbilitaAttive(), data.getLivello(),
+				Classi.getEnumByTipo(data.getClasse()), Specializzazioni.getEnumByTipo(data.getSpecializzazione()), data.getAbilitaAttive(), data.getLivello(),
 				data.getBackground(), data.getTratti_caratteriali(), data.getIdeali(), data.getLegami(),
 				data.getDifetti());
 		return new ResponseEntity<>(pgService.savePg(pg), HttpStatus.CREATED);

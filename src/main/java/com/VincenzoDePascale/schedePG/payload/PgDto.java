@@ -24,6 +24,7 @@ public class PgDto {
 	private int carisma;
 	private String razza;
 	private String classe;
+	private String specializzazione;
 	private List<String> abilitaAttive;
 	private int livello;
 	private String background;

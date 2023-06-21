@@ -11,10 +11,13 @@ import com.VincenzoDePascale.schedePG.list.Armi;
 import com.VincenzoDePascale.schedePG.list.Classi;
 import com.VincenzoDePascale.schedePG.list.Dadi;
 import com.VincenzoDePascale.schedePG.list.Equipaggiamento;
+import com.VincenzoDePascale.schedePG.list.Incantesimi;
 import com.VincenzoDePascale.schedePG.list.Linguaggi;
 import com.VincenzoDePascale.schedePG.list.Privilegi;
+import com.VincenzoDePascale.schedePG.list.PrivilegiSpeciali;
 import com.VincenzoDePascale.schedePG.list.Razze;
 import com.VincenzoDePascale.schedePG.list.Scudi;
+import com.VincenzoDePascale.schedePG.list.Specializzazioni;
 import com.VincenzoDePascale.schedePG.list.Statistiche;
 import com.VincenzoDePascale.schedePG.list.TipiEquip;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -69,6 +72,10 @@ public class Pg {
 
 	@Column
 	@Enumerated(EnumType.STRING)
+	private Specializzazioni specializzazione;
+
+	@Column
+	@Enumerated(EnumType.STRING)
 	private Allineamenti allineamento;
 
 	@Column(nullable = false)
@@ -110,6 +117,10 @@ public class Pg {
 	@Column
 	@Enumerated(EnumType.STRING)
 	private List<Privilegi> privilegi;
+	
+	@Column
+	@Enumerated(EnumType.STRING)
+	private List<PrivilegiSpeciali> privilegiSpeciali;
 
 	// ABILITÀ--------------------------------------------------------
 
@@ -153,20 +164,20 @@ public class Pg {
 
 	// EQUIPAGGIAMENTO----------------------------------
 
-	@Enumerated(EnumType.STRING)
 	@Column
+	@Enumerated(EnumType.STRING)
 	private List<Equipaggiamento> equipaggiamentoBase;
 
-	@Enumerated(EnumType.STRING)
 	@Column
+	@Enumerated(EnumType.STRING)
 	private Armature armatura;
-	
-	@Enumerated(EnumType.STRING)
+
 	@Column
+	@Enumerated(EnumType.STRING)
 	private Scudi scudo;
 
-	@Enumerated(EnumType.STRING)
 	@Column
+	@Enumerated(EnumType.STRING)
 	private List<Armi> armi;
 
 	@Column
@@ -196,24 +207,29 @@ public class Pg {
 	private String difetti;
 
 	// INCANTESIMI CHE NON CI SONO
-	// ---------------------------------------------------------------------------------
-	// FUNZIONI DI CALCOLO DATI PRIMA DI ESSERE SALVATI NEL DB
 
+	@Column
+	@Enumerated(EnumType.STRING)
+	private List<Incantesimi> incantesimi;
+	// ---------------------------------------------------------------------------------
+	
 	// COSTRUTTORI
 
 	// costruttore SENZA ID
-	public Pg(User giocatore, String nomePG, Razze razza, Classi classe, Allineamenti allineamento, Integer livello,
+	public Pg(User giocatore, String nomePG, Razze razza, Classi classe, Specializzazioni specializzazione, Allineamenti allineamento, Integer livello,
 			String background, Integer puntiExp, int forza, int destrezza, int costituzione, int intelligenza,
-			int saggezza, int carisma, List<Statistiche> TSattivi, List<String> abilitaAttive, List<TipiEquip> competenze, List<Privilegi> privilegi, Boolean ispizazione, Integer bonusCompetenza, List<Linguaggi> linguaggi,
+			int saggezza, int carisma, List<Statistiche> TSattivi, List<String> abilitaAttive, List<TipiEquip> competenze, List<Privilegi> privilegi, List<PrivilegiSpeciali> privilegiSpeciali,
+			Boolean ispizazione, Integer bonusCompetenza, List<Linguaggi> linguaggi,
 			Integer iniziativa, double velocita, Integer pF_max, Integer pF, Integer pF_temporanei, Dadi dado_vita,
 			Integer dado_vita_num, Integer tS_morte, List<Equipaggiamento> equipaggiamentoBase, Armature armatura,
-			Scudi scudo, List<Armi> armi, Integer monete_rame, Integer monete_argento, Integer monete_oro,
+			Scudi scudo, List<Armi> armi, List<Incantesimi> incantesimi, Integer monete_rame, Integer monete_argento, Integer monete_oro,
 			Integer monete_platino, String tratti_caratteriali, String ideali, String legami, String difetti) {
 		super();
 		this.giocatore = giocatore;
 		this.nomePG = nomePG;
 		this.razza = razza;
 		this.classe = classe;
+		this.specializzazione = specializzazione;
 		this.allineamento = allineamento;
 		this.livello = livello;
 		this.background = background;
@@ -228,6 +244,7 @@ public class Pg {
 		this.abilitaAttive = abilitaAttive;
 		this.competenze = competenze;
 		this.privilegi = privilegi;
+		this.privilegiSpeciali = privilegiSpeciali;
 		this.ispirazione = ispizazione;
 		this.bonusCompetenza = bonusCompetenza;
 		this.linguaggi = linguaggi;
@@ -243,6 +260,7 @@ public class Pg {
 		this.armatura = armatura;
 		this.scudo = scudo;
 		this.armi = armi;
+		this.incantesimi = incantesimi;
 		this.monete_rame = monete_rame;
 		this.monete_argento = monete_argento;
 		this.monete_oro = monete_oro;
@@ -255,12 +273,13 @@ public class Pg {
 
 	// costruttori con calcoli interni
 	public Pg(User giocatore, String nomePG, Allineamenti allineamento, int forza, int destrezza, int costituzione,
-			int intelligenza, int saggezza, int carisma, Razze razza, Classi classe, List<String> abilitaAttive, int livello, String background,
+			int intelligenza, int saggezza, int carisma, Razze razza, Classi classe, Specializzazioni specializzazione, List<String> abilitaAttive, int livello, String background,
 			String tratti_caratteriali, String ideali, String legami, String difetti) {
 		super();
 
 		Razze rz = razza;
 		Classi cl = classe;
+		Specializzazioni special = specializzazione;
 
 		int statFor = forza;
 		int statDes = destrezza;
@@ -271,6 +290,8 @@ public class Pg {
 
 		List<Linguaggi> listaLinguaggi = new ArrayList<>();
 		listaLinguaggi.add(Linguaggi.COMUNE);
+		
+		List<Incantesimi> listaIncantesimi = new ArrayList<>();
 
 		switch (rz) {
 		case ELFO:
@@ -515,13 +536,14 @@ public class Pg {
 					Equipaggiamento.GAVETTA,
 					Equipaggiamento.ACCIARINO_E_PIETRA_FOCAIA,
 					Equipaggiamento.CORDA_DI_CANAPA,
-					Equipaggiamento.OTRE,
-					Equipaggiamento.TOTEM);
+					Equipaggiamento.OTRE);
 			
 			for(int i = 0; i<10; i++) {
 				addToList(equip, Equipaggiamento.TORCIA, Equipaggiamento.RAZIONE);
 			}
 			//un focus druidico
+			addToList(equip,
+					Equipaggiamento.TOTEM);
 			//tiri salvezza
 			addToList(listTSattivi,
 					Statistiche.INTELLIGENZA,
@@ -676,6 +698,7 @@ public class Pg {
 			addToList(listArmi,
 					Armi.SPADA_CORTA);
 			//uno zaino da speleologo o uno zaino da esploratore
+			addToList(equip, Equipaggiamento.ZAINO_DA_ESPLORATORE);
 			//10 dardi
 			for(int i = 0; i<10; i++) {
 				addToList(listArmi, Armi.DARDO);
@@ -709,6 +732,7 @@ public class Pg {
 				addToList(listArmi, Armi.GIAVELLOTTO);
 			}
 			//uno zaino da sacerdote o uno zaino da esploratore
+			addToList(equip, Equipaggiamento.ZAINO_DA_SACERDOTE);
 			//Cotta di maglia e un simbolo sacro
 			this.armatura = Armature.COTTA_DI_MAGLIA;
 			addToList(equip, Equipaggiamento.EMBLEMA);
@@ -747,6 +771,7 @@ public class Pg {
 					Armi.SPADA_CORTA,
 					Armi.SPADA_CORTA);
 			//uno zaino da speleologo o uno zaino da esploratore
+			addToList(equip, Equipaggiamento.ZAINO_DA_ESPLORATORE);
 			this.scudo = null;
 			//tiri salvezza
 			addToList(listTSattivi,
@@ -778,6 +803,7 @@ public class Pg {
 			addToList(listArmi,
 					Armi.BALESTRA_LEGGERA);
 			//una borsa per componenti o (b) un focus arcano
+			addToList(equip, Equipaggiamento.BORSA_PER_COMPONENTI);
 			//una dotazione da avventuriero o (b) una dotazione da esploratore [ora avventuriero]
 			addToList(equip,
 					Equipaggiamento.BASTONE,
@@ -794,6 +820,7 @@ public class Pg {
 						Equipaggiamento.TORCIA);
 			}
 			//Due pugnali
+			addToList(listArmi, Armi.PUGNALE, Armi.PUGNALE);
 			this.scudo = null;
 			//tiri salvezza
 			addToList(listTSattivi,
@@ -938,7 +965,6 @@ public class Pg {
 			break;
 		}
 		
-
 		List<Privilegi> listaPrivilegi = new ArrayList<>();
 		
 		for (Privilegi privilegio : Privilegi.values()) {
@@ -946,11 +972,20 @@ public class Pg {
 		        listaPrivilegi.add(privilegio);
 		    }
 		}
+		
+		List<PrivilegiSpeciali> listaPrivilegiSpeciali = new ArrayList<>();
+		
+		for (PrivilegiSpeciali priSpec : PrivilegiSpeciali.values()) {
+			if(cl == priSpec.getClasse() && special == priSpec.getSpecializzazione() && liv >= priSpec.getLivello()) {
+				listaPrivilegiSpeciali.add(priSpec);
+			}
+		}
 
 		this.giocatore = giocatore;
 		this.nomePG = nomePG;
 		this.razza = rz;
 		this.classe = cl;
+		this.specializzazione = specializzazione;
 		this.allineamento = allineamento;
 		this.livello = liv;
 		this.background = background;
@@ -965,6 +1000,7 @@ public class Pg {
 		this.abilitaAttive = abilitaAttive;
 		this.competenze = listaCompetenze;
 		this.privilegi = listaPrivilegi;
+		this.privilegiSpeciali = listaPrivilegiSpeciali;
 		this.ispirazione = false;
 		this.linguaggi = listaLinguaggi;
 		this.iniziativa = 0;
@@ -974,6 +1010,7 @@ public class Pg {
 		this.TS_morte = 0;
 		this.equipaggiamentoBase = equip;
 		this.armi = listArmi;
+		this.incantesimi = listaIncantesimi;
 		this.monete_rame = 0;
 		this.monete_argento = 0;
 		this.monete_oro = 0;
@@ -984,17 +1021,9 @@ public class Pg {
 		this.difetti = difetti;
 	}
 
-	public static <T extends Enum<T>> void addToList(List<T> equip, T... elementi) {
+	public static <T extends Enum<T>> void addToList(List<T> list, T... elementi) {
 	    for (T elemento : elementi) {
-	        equip.add(elemento);
+	        list.add(elemento);
 	    }
 	}
-
-	//alla
-	//prossima
-	//riga
-	//raggiungo
-	//il
-	//mio
-	//obiettivo
 }
