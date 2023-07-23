@@ -10,7 +10,7 @@ import com.VincenzoDePascale.schedePG.list.Armature;
 import com.VincenzoDePascale.schedePG.list.Armi;
 import com.VincenzoDePascale.schedePG.list.Classi;
 import com.VincenzoDePascale.schedePG.list.Dadi;
-import com.VincenzoDePascale.schedePG.list.Equipaggiamento;
+import com.VincenzoDePascale.schedePG.model.*;
 import com.VincenzoDePascale.schedePG.list.Incantesimi;
 import com.VincenzoDePascale.schedePG.list.Linguaggi;
 import com.VincenzoDePascale.schedePG.list.Privilegi;
@@ -32,6 +32,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
@@ -164,9 +166,17 @@ public class Pg {
 
 	// EQUIPAGGIAMENTO----------------------------------
 
-	@Column
-	@Enumerated(EnumType.STRING)
-	private List<Equipaggiamento> equipaggiamentoBase;
+//	@Column
+//	@Enumerated(EnumType.STRING)
+//	private List<Equipaggiamento> equipaggiamentoBase;
+	
+	@ManyToMany
+    @JoinTable(
+        name = "pg_equipaggiamento",
+        joinColumns = @JoinColumn(name = "pg_id"),
+        inverseJoinColumns = @JoinColumn(name = "equipaggiamento_id")
+    )
+    private List<Equipaggiamento> equipaggiamentoBase;
 
 	@Column
 	@Enumerated(EnumType.STRING)
@@ -380,19 +390,20 @@ public class Pg {
 					Armi.ASCIA_BIPENNE,
 					Armi.ASCIA,
 					Armi.ASCIA);
-			//Una dotazione da esploratore e quattro giavellotti
-			addToList(equip,
-					Equipaggiamento.ZAINO,
-					Equipaggiamento.GIACIGLIO,
-					Equipaggiamento.GAVETTA,
-					Equipaggiamento.ACCIARINO_E_PIETRA_FOCAIA,
-					Equipaggiamento.CORDA_DI_CANAPA,
-					Equipaggiamento.OTRE);
-			for(int i = 0; i<10; i++) {
-				addToList(equip,
-						Equipaggiamento.TORCIA,
-						Equipaggiamento.RAZIONE);
-			}
+//			--DA RIFARE--
+//			Una dotazione da esploratore e quattro giavellotti
+//			addToList(equip,
+//					Equipaggiamento.ZAINO,
+//					Equipaggiamento.GIACIGLIO,
+//					Equipaggiamento.GAVETTA,
+//					Equipaggiamento.ACCIARINO_E_PIETRA_FOCAIA,
+//					Equipaggiamento.CORDA_DI_CANAPA,
+//					Equipaggiamento.OTRE);
+//			for(int i = 0; i<10; i++) {
+//				addToList(equip,
+//						Equipaggiamento.TORCIA,
+//						Equipaggiamento.RAZIONE);
+//			}
 			
 			for(int i = 0; i<4; i++) {
 				listArmi.add(Armi.GIAVELLOTTO);
@@ -429,26 +440,27 @@ public class Pg {
 			//Un'armatura di cuoio e un pugnale
 			this.armatura= Armature.CUOIO;
 			this.scudo = null;
-			//una dotazione da diplomatico o una dotazione da intrattenitore [diplomatico]
-			addToList(equip,
-					Equipaggiamento.FORZIERE,
-					Equipaggiamento.ABITO_PR,
-					Equipaggiamento.INCHIOSTRO,
-					Equipaggiamento.PENNINO,
-					Equipaggiamento.LAMPADA,
-					Equipaggiamento.PROFUMO,
-					Equipaggiamento.CERA_PER_SIGILLO,
-					Equipaggiamento.SAPONE,
-					//un liuto o (b) un qualsiasi altro strumento musicale [ora solo liuto]
-					Equipaggiamento.LIUTO);
-
-			for(int i = 0; i<2; i++) {
-				equip.add(Equipaggiamento.CUSTODIA_PER_MAPPE_O_PERGAMENE);
-				equip.add(Equipaggiamento.AMPOLLA);
-			}
-			for(int i = 0; i<5; i++) {
-				equip.add(Equipaggiamento.CARTA);
-			}
+//			--DA RIFARE--
+//			una dotazione da diplomatico o una dotazione da intrattenitore [diplomatico]
+//			addToList(equip,
+//					Equipaggiamento.FORZIERE,
+//					Equipaggiamento.ABITO_PR,
+//					Equipaggiamento.INCHIOSTRO,
+//					Equipaggiamento.PENNINO,
+//					Equipaggiamento.LAMPADA,
+//					Equipaggiamento.PROFUMO,
+//					Equipaggiamento.CERA_PER_SIGILLO,
+//					Equipaggiamento.SAPONE,
+//					//un liuto o (b) un qualsiasi altro strumento musicale [ora solo liuto]
+//					Equipaggiamento.LIUTO);
+//
+//			for(int i = 0; i<2; i++) {
+//				equip.add(Equipaggiamento.CUSTODIA_PER_MAPPE_O_PERGAMENE);
+//				equip.add(Equipaggiamento.AMPOLLA);
+//			}
+//			for(int i = 0; i<5; i++) {
+//				equip.add(Equipaggiamento.CARTA);
+//			}
 
 			//tiri salvezza
 			addToList(listTSattivi, Statistiche.DESTREZZA, Statistiche.CARISMA);
@@ -479,25 +491,26 @@ public class Pg {
 			//una corazza di scaglie, (b) un'armatura di cuoio o (c) una cotta di maglia (Se ha competenza)
 			this.armatura= Armature.CORAZZA_DI_SCAGLIE;
 			
-			//una dotazione da sacerdote o (b) una dotazione da esploratore [ora solo sacerdote]
-			addToList(equip,
-					Equipaggiamento.ZAINO,
-					Equipaggiamento.COPERTA,
-					Equipaggiamento.ACCIARINO_E_PIETRA_FOCAIA,
-					Equipaggiamento.CASSETTA_PER_LE_OFFERTE,
-					Equipaggiamento.INCENSIERE,
-					Equipaggiamento.VESTE,
-					Equipaggiamento.OTRE,
-					Equipaggiamento.EMBLEMA);
-			for(int i = 0; i<10; i++) {
-				equip.add(Equipaggiamento.CANDELA);
-			}
-			for(int i = 0; i<2; i++) {
-				equip.add(Equipaggiamento.INCENSO);
-			}
-			for(int i = 0; i<10; i++) {
-				equip.add(Equipaggiamento.RAZIONE);
-			}
+//			--DA RIFARE--
+//			una dotazione da sacerdote o (b) una dotazione da esploratore [ora solo sacerdote]
+//			addToList(equip,
+//					Equipaggiamento.ZAINO,
+//					Equipaggiamento.COPERTA,
+//					Equipaggiamento.ACCIARINO_E_PIETRA_FOCAIA,
+//					Equipaggiamento.CASSETTA_PER_LE_OFFERTE,
+//					Equipaggiamento.INCENSIERE,
+//					Equipaggiamento.VESTE,
+//					Equipaggiamento.OTRE,
+//					Equipaggiamento.EMBLEMA);
+//			for(int i = 0; i<10; i++) {
+//				equip.add(Equipaggiamento.CANDELA);
+//			}
+//			for(int i = 0; i<2; i++) {
+//				equip.add(Equipaggiamento.INCENSO);
+//			}
+//			for(int i = 0; i<10; i++) {
+//				equip.add(Equipaggiamento.RAZIONE);
+//			}
 			
 			//Uno scudo e un simbolo sacro
 			
@@ -529,21 +542,23 @@ public class Pg {
 			listArmi.add(Armi.SCIMITARRA);
 			//Un'armatura di cuoio
 			this.armatura= Armature.CUOIO;
-			//una dotazione da esploratore
-			addToList(equip,
-					Equipaggiamento.ZAINO,
-					Equipaggiamento.GIACIGLIO,
-					Equipaggiamento.GAVETTA,
-					Equipaggiamento.ACCIARINO_E_PIETRA_FOCAIA,
-					Equipaggiamento.CORDA_DI_CANAPA,
-					Equipaggiamento.OTRE);
 			
-			for(int i = 0; i<10; i++) {
-				addToList(equip, Equipaggiamento.TORCIA, Equipaggiamento.RAZIONE);
-			}
-			//un focus druidico
-			addToList(equip,
-					Equipaggiamento.TOTEM);
+//			--DA RIFARE--
+//			una dotazione da esploratore
+//			addToList(equip,
+//					Equipaggiamento.ZAINO,
+//					Equipaggiamento.GIACIGLIO,
+//					Equipaggiamento.GAVETTA,
+//					Equipaggiamento.ACCIARINO_E_PIETRA_FOCAIA,
+//					Equipaggiamento.CORDA_DI_CANAPA,
+//					Equipaggiamento.OTRE);
+//			
+//			for(int i = 0; i<10; i++) {
+//				addToList(equip, Equipaggiamento.TORCIA, Equipaggiamento.RAZIONE);
+//			}
+//			//un focus druidico
+//			addToList(equip,
+//					Equipaggiamento.TOTEM);
 			//tiri salvezza
 			addToList(listTSattivi,
 					Statistiche.INTELLIGENZA,
@@ -619,10 +634,13 @@ public class Pg {
 					Armi.PUGNALE);
 			this.armatura= Armature.CUOIO;
 			this.scudo = null;
-			//uno zaino da rapinatore, uno zaino da speleologo o uno zaino da esploratore
-			addToList(equip,
-					Equipaggiamento.FARETRA,
-					Equipaggiamento.ARNESI_DA_SCASSO);
+			
+//			--DA RIFARE--
+//			uno zaino da rapinatore, uno zaino da speleologo o uno zaino da esploratore
+//			addToList(equip,
+//					Equipaggiamento.FARETRA,
+//					Equipaggiamento.ARNESI_DA_SCASSO);
+			
 			//tiri salvezza
 			addToList(listTSattivi,
 					Statistiche.DESTREZZA,
@@ -651,23 +669,25 @@ public class Pg {
 			//un bastone ferrato o un pugnale
 			addToList(listArmi,
 					Armi.BASTONE_FERRATO);
-			//una borsa per componenti o un focus arcano
-			//una dotazione da studioso o (b) una dotazione da esploratore [studioso]
-			//Un libro degli incantesimi
-			addToList(equip,
-					Equipaggiamento.BACCHETTA,
-					Equipaggiamento.ZAINO,
-					Equipaggiamento.LIBRO,
-					Equipaggiamento.INCHIOSTRO,
-					Equipaggiamento.PENNINO,
-					Equipaggiamento.BACCHETTA,
-					Equipaggiamento.SACCHETTO_DI_SABBIA,
-					Equipaggiamento.COLTELLINO,
-					Equipaggiamento.LIBRO_DEGLI_INCANTESIMI);
 			
-			for(int i = 0; i<10; i++) {
-				equip.add(Equipaggiamento.PERGAMENA);
-			}
+//			--DA RIFARE--
+//			una borsa per componenti o un focus arcano
+//			una dotazione da studioso o (b) una dotazione da esploratore [studioso]
+//			Un libro degli incantesimi
+//			addToList(equip,
+//					Equipaggiamento.BACCHETTA,
+//					Equipaggiamento.ZAINO,
+//					Equipaggiamento.LIBRO,
+//					Equipaggiamento.INCHIOSTRO,
+//					Equipaggiamento.PENNINO,
+//					Equipaggiamento.BACCHETTA,
+//					Equipaggiamento.SACCHETTO_DI_SABBIA,
+//					Equipaggiamento.COLTELLINO,
+//					Equipaggiamento.LIBRO_DEGLI_INCANTESIMI);
+//			
+//			for(int i = 0; i<10; i++) {
+//				equip.add(Equipaggiamento.PERGAMENA);
+//			}
 			
 			
 			//tiri salvezza
@@ -697,8 +717,11 @@ public class Pg {
 			//una spada corta o qualsiasi arma semplice
 			addToList(listArmi,
 					Armi.SPADA_CORTA);
-			//uno zaino da speleologo o uno zaino da esploratore
-			addToList(equip, Equipaggiamento.ZAINO_DA_ESPLORATORE);
+			
+//			--DA RIFARE--
+//			uno zaino da speleologo o uno zaino da esploratore
+//			addToList(equip, Equipaggiamento.ZAINO_DA_ESPLORATORE);
+			
 			//10 dardi
 			for(int i = 0; i<10; i++) {
 				addToList(listArmi, Armi.DARDO);
@@ -731,11 +754,14 @@ public class Pg {
 			for(int i = 0; i<5; i++) {
 				addToList(listArmi, Armi.GIAVELLOTTO);
 			}
-			//uno zaino da sacerdote o uno zaino da esploratore
-			addToList(equip, Equipaggiamento.ZAINO_DA_SACERDOTE);
+			
+//			--DA RIFARE--
+//			uno zaino da sacerdote o uno zaino da esploratore
+//			addToList(equip, Equipaggiamento.ZAINO_DA_SACERDOTE);
+//			addToList(equip, Equipaggiamento.EMBLEMA);
+			
 			//Cotta di maglia e un simbolo sacro
 			this.armatura = Armature.COTTA_DI_MAGLIA;
-			addToList(equip, Equipaggiamento.EMBLEMA);
 			//tiri salvezza
 			addToList(listTSattivi,
 					Statistiche.SAGGEZZA,
@@ -771,7 +797,10 @@ public class Pg {
 					Armi.SPADA_CORTA,
 					Armi.SPADA_CORTA);
 			//uno zaino da speleologo o uno zaino da esploratore
-			addToList(equip, Equipaggiamento.ZAINO_DA_ESPLORATORE);
+			
+//			--DA RIFARE--
+//			addToList(equip, Equipaggiamento.ZAINO_DA_ESPLORATORE);
+			
 			this.scudo = null;
 			//tiri salvezza
 			addToList(listTSattivi,
@@ -802,23 +831,26 @@ public class Pg {
 			//una balestra leggera e 20 quadrelli o una qualsiasi arma semplice
 			addToList(listArmi,
 					Armi.BALESTRA_LEGGERA);
-			//una borsa per componenti o (b) un focus arcano
-			addToList(equip, Equipaggiamento.BORSA_PER_COMPONENTI);
-			//una dotazione da avventuriero o (b) una dotazione da esploratore [ora avventuriero]
-			addToList(equip,
-					Equipaggiamento.BASTONE,
-					Equipaggiamento.ZAINO,
-					Equipaggiamento.PIEDE_DI_PORCO,
-					Equipaggiamento.MARTELLO,
-					Equipaggiamento.ACCIARINO_E_PIETRA_FOCAIA,
-					Equipaggiamento.OTRE);
 			
-			for(int i = 0; i<10; i++) {
-				addToList(equip,
-						Equipaggiamento.CHIODO_DA_ROCCIATORE,
-						Equipaggiamento.RAZIONE,
-						Equipaggiamento.TORCIA);
-			}
+//			--DA RIFARE--
+//			una borsa per componenti o (b) un focus arcano
+//			addToList(equip, Equipaggiamento.BORSA_PER_COMPONENTI);
+//			una dotazione da avventuriero o (b) una dotazione da esploratore [ora avventuriero]
+//			addToList(equip,
+//					Equipaggiamento.BASTONE,
+//					Equipaggiamento.ZAINO,
+//					Equipaggiamento.PIEDE_DI_PORCO,
+//					Equipaggiamento.MARTELLO,
+//					Equipaggiamento.ACCIARINO_E_PIETRA_FOCAIA,
+//					Equipaggiamento.OTRE);
+//			
+//			for(int i = 0; i<10; i++) {
+//				addToList(equip,
+//						Equipaggiamento.CHIODO_DA_ROCCIATORE,
+//						Equipaggiamento.RAZIONE,
+//						Equipaggiamento.TORCIA);
+//			}
+			
 			//Due pugnali
 			addToList(listArmi, Armi.PUGNALE, Armi.PUGNALE);
 			this.scudo = null;
@@ -849,20 +881,23 @@ public class Pg {
 			// una balestra leggera e 20 quadrelli o una qualsiasi arma semplice.
 			addToList(listArmi, Armi.BALESTRA_LEGGERA);
 			//una borsa per componenti o (b) un focus arcano.
-			addToList(equip,
-					//una dotazione da studioso o (b) una dotazione da avventuriero. [ora solo avventuriero]
-					Equipaggiamento.CRISTALLO,
-					Equipaggiamento.ZAINO,
-					Equipaggiamento.PIEDE_DI_PORCO,
-					Equipaggiamento.MARTELLO,
-					Equipaggiamento.ACCIARINO_E_PIETRA_FOCAIA,
-					Equipaggiamento.OTRE);
-			for(int i = 0; i<10; i++) {
-				addToList(equip,
-						Equipaggiamento.CHIODO_DA_ROCCIATORE,
-						Equipaggiamento.RAZIONE,
-						Equipaggiamento.TORCIA);
-			}
+			
+//			--DA RIFARE--
+//			addToList(equip,
+//					//una dotazione da studioso o (b) una dotazione da avventuriero. [ora solo avventuriero]
+//					Equipaggiamento.CRISTALLO,
+//					Equipaggiamento.ZAINO,
+//					Equipaggiamento.PIEDE_DI_PORCO,
+//					Equipaggiamento.MARTELLO,
+//					Equipaggiamento.ACCIARINO_E_PIETRA_FOCAIA,
+//					Equipaggiamento.OTRE);
+//			for(int i = 0; i<10; i++) {
+//				addToList(equip,
+//						Equipaggiamento.CHIODO_DA_ROCCIATORE,
+//						Equipaggiamento.RAZIONE,
+//						Equipaggiamento.TORCIA);
+//			}
+			
 			//Un'armatura di cuoio, una qualsiasi arma semplice e due pugnali.
 			this.armatura= Armature.CUOIO;
 			this.scudo = null;
