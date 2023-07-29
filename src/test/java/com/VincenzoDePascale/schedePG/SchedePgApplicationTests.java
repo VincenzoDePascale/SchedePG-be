@@ -1,7 +1,8 @@
 package com.VincenzoDePascale.schedePG;
 
 
-import org.junit.Test;
+
+import org.junit.jupiter.api.Test;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
